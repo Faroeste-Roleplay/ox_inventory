@@ -30,13 +30,17 @@ const InventoryHotbar: React.FC = () => {
         {items.map((item) => (
           <div
             className="hotbar-item-slot"
-            style={{
-              backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
-            }}
+
             key={`hotbar-${item.slot}`}
           >
             {isSlotWithItem(item) && (
-              <div className="item-slot-wrapper">
+              <div className="item-slot-wrapper"
+                style={{
+                  backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center"
+                }}
+              >
                 <div className="hotbar-slot-header-wrapper">
                   <div className="inventory-slot-number">{item.slot}</div>
                   <div className="item-slot-info-wrapper">

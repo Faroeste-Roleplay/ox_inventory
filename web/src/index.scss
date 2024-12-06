@@ -393,6 +393,7 @@ button:active {
   font-size: 12px;
 }
 
+
 .inventory-slot-number {
   color: $textColor;
 
@@ -416,6 +417,18 @@ button:active {
   pointer-events: none;
 }
 
+.hotbar-slot-header-wrapper > .inventory-slot-number {
+  
+  font-size: 1.5vh;
+  opacity: 0.6;
+
+  justify-content: left;
+  align-items: start;
+
+  padding-left: .4em;
+  padding-top: .4em;
+}
+
 .item-slot-wrapper {
   display: flex;
   flex-direction: column;
@@ -425,6 +438,7 @@ button:active {
     font-size: 12px;
   }
 }
+
 
 .item-slot-header-wrapper {
   display: flex;
@@ -563,8 +577,20 @@ button:active {
 
 .hotbar-item-slot {
   @extend .inventory-slot;
+  background-color: transparent;
+  
+  background: url(../images/slot.png);
+  background-size: contain;
+  border: none;
+
   width: $gridSize;
   height: $gridSize;
+}
+
+.hotbar-item-slot > .item-slot-wrapper {
+  image-rendering: -webkit-optimize-contrast;
+  position: relative;
+  background-size: 6vh;
 }
 
 .hotbar-slot-header-wrapper {
@@ -581,7 +607,7 @@ button:active {
   flex-wrap: nowrap;
   gap: 2px;
   position: absolute;
-  bottom: 20vh;
+  bottom: 16vh;
   left: 50%;
   width: 100%;
   margin-left: calc(50% - calc($gridSize/2));
@@ -590,8 +616,10 @@ button:active {
 
 .item-notification-action-box {
   width: 100%;
-  color: $textColor;
-  background-color: $secondaryColor;
+  color: white;
+  // color: $textColor;
+  // background-color: $secondaryColor;
+  
   text-transform: uppercase;
   text-align: center;
   border-top-left-radius: 0.25vh;
@@ -601,13 +629,18 @@ button:active {
     font-size: 11px;
     padding: 2px;
     font-weight: 600;
+    text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
   }
 }
 
 .item-notification-item-box {
   @extend .inventory-slot;
-  height: $gridSize;
-  width: $gridSize;
+
+  background-color: transparent;
+  border: none;
+
+  height: $gridSize + 2vh;
+  width: $gridSize + 2vh;
 }
 
 .durability-bar {
