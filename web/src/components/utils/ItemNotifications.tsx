@@ -87,7 +87,7 @@ export const ItemNotificationsProvider = ({ children }: { children: React.ReactN
   };
 
   useNuiEvent<[item: SlotWithItem, text: string, count?: number]>('itemNotify', ([item, text, count]) => {
-    const itemCount = item.name == "money" ? ((count ?? 1) / 100).toFixed(2) : item.count.toLocaleString('en-us')
+    const itemCount = item.name == "money" ? ((count ?? 1) / 100).toFixed(2) : count?.toLocaleString('en-us')
     add({ item: item, type: text, text: count ? `${Locale[text]} ${itemCount}x` : `${Locale[text]}` });
   });
 
