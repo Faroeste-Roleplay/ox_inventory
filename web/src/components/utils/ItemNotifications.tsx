@@ -12,6 +12,7 @@ import Fade from './transitions/Fade';
 interface ItemNotificationProps {
   item: SlotWithItem;
   text: string;
+  type: string;
 }
 
 export const ItemNotificationsContext = React.createContext<{
@@ -31,20 +32,30 @@ const ItemNotification = React.forwardRef(
     return (
       <div
         className="item-notification-item-box"
+        ref={ref}
         style={{
-          backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`,
           ...props.style,
         }}
-        ref={ref}
       >
+
         <div className="item-slot-wrapper">
-          <div className="item-notification-action-box">
-            <p>{props.item.text}</p>
+          <div className={`inventory-slot-label-box`}>
+
+            <div className={`inventory-slot-label-text ${props.item.type}`}> {slotItem.metadata?.label || Items[slotItem.name]?.label} </div>
+
+            <div className="item-notification-action-box">
+              <p className={`${props.item.type}`} >{props.item.text}</p>
+            </div>
+
           </div>
-          <div className="inventory-slot-label-box">
-            <div className="inventory-slot-label-text">{slotItem.metadata?.label || Items[slotItem.name]?.label}</div>
-          </div>
+
+          <div className="item-slot-image" style={{
+            backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`,
+          }} />
         </div>
+
+
+
       </div>
     );
   }
@@ -55,7 +66,13 @@ export const ItemNotificationsProvider = ({ children }: { children: React.ReactN
     id: number;
     item: ItemNotificationProps;
     ref: React.RefObject<HTMLDivElement>;
-  }>();
+  }>([
+    // { id: 1, item: { item: { slot: 1, name: "money", count: 120, weight: 200 }, type: "ui_removed",  text: "ui_removed" }, ref: null },
+    // { id: 1, item: { item: { slot: 1, name: "money", count: 120, weight: 200 }, text: "ui_removed" }, ref: null },
+    // { id: 1, item: { item: { slot: 1, name: "money", count: 120, weight: 200 }, text: "ui_removed" }, ref: null },
+    // { id: 1, item: { item: { slot: 1, name: "money", count: 120, weight: 200 }, text: "ui_removed" }, ref: null },
+    // { id: 1, item: { item: { slot: 1, name: "money", count: 120, weight: 200 }, text: "ui_removed" }, ref: null }
+  ]);
 
   const add = (item: ItemNotificationProps) => {
     const ref = React.createRef<HTMLDivElement>();
@@ -70,8 +87,8 @@ export const ItemNotificationsProvider = ({ children }: { children: React.ReactN
   };
 
   useNuiEvent<[item: SlotWithItem, text: string, count?: number]>('itemNotify', ([item, text, count]) => {
-    const itemCount =  item.name == "money" ? ((count ?? 1) / 100).toFixed(2) : item.count.toLocaleString('en-us')
-    add({ item: item, text: count ? `${Locale[text]} ${itemCount}x` : `${Locale[text]}` });
+    const itemCount = item.name == "money" ? ((count ?? 1) / 100).toFixed(2) : item.count.toLocaleString('en-us')
+    add({ item: item, type: text, text: count ? `${Locale[text]} ${itemCount}x` : `${Locale[text]}` });
   });
 
   return (

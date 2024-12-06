@@ -371,26 +371,25 @@ button:active {
 }
 
 .inventory-slot-label-box {
-  display: none;
-  background-color: $mainColor;
-  color: $textColor;
-  text-align: center;
+  display: block;
+  text-align: right;
   border-bottom-left-radius: 0.25vh;
   border-bottom-right-radius: 0.25vh;
-  border-top-color: rgba(0, 0, 0, 0.2);
-  border-top-style: inset;
-  border-top-width: 1px;
+  // border-top-color: rgba(0, 0, 0, 0.2);
+  // border-top-style: inset;
+  // border-top-width: 1px;
 }
 
 .inventory-slot-label-text {
-  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 2px 3px;
   font-weight: 400;
-  font-family: $mainFont;
-  font-size: 12px;
+  font-family: $secondFont;
+  text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 16px;
 }
 
 
@@ -429,6 +428,16 @@ button:active {
   padding-top: .4em;
 }
 
+.item-slot-image {
+  @extend .inventory-slot;
+
+  background-color: transparent;
+  border: none;
+
+  height: $gridSize;
+  width: $gridSize;
+}
+
 .item-slot-wrapper {
   display: flex;
   flex-direction: column;
@@ -437,6 +446,14 @@ button:active {
   p {
     font-size: 12px;
   }
+}
+
+.item-notification-item-box > .item-slot-wrapper {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  gap: 2vh;
 }
 
 
@@ -604,14 +621,16 @@ button:active {
 .item-notification-container {
   display: flex;
   overflow-x: scroll;
+
+  flex-direction: column;
   flex-wrap: nowrap;
   gap: 2px;
   position: absolute;
-  bottom: 16vh;
-  left: 50%;
-  width: 100%;
-  margin-left: calc(50% - calc($gridSize/2));
-  transform: translate(-50%);
+  top: 45vh;
+  right: 2%;
+  width: auto;
+  // margin-left: calc(50% - calc($gridSize/2));
+  // transform: translate(-50%);
 }
 
 .item-notification-action-box {
@@ -621,13 +640,12 @@ button:active {
   // background-color: $secondaryColor;
   
   text-transform: uppercase;
-  text-align: center;
+  text-align: right;
   border-top-left-radius: 0.25vh;
   border-top-right-radius: 0.25vh;
   font-family: $mainFont;
   p {
     font-size: 11px;
-    padding: 2px;
     font-weight: 600;
     text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
   }
@@ -639,8 +657,8 @@ button:active {
   background-color: transparent;
   border: none;
 
-  height: $gridSize + 2vh;
-  width: $gridSize + 2vh;
+  min-height: $gridSize + 2vh;
+  min-width: $gridSize;
 }
 
 .durability-bar {
@@ -709,3 +727,6 @@ button:active {
   transition: all 200ms;
 }
 
+.ui_removed {
+  color: rgb(199, 5, 4) !important;
+}
