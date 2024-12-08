@@ -19,7 +19,7 @@ shared = {
     playerweight = GetConvarInt('inventory:weight', 30000),
     target = GetConvarInt('inventory:target', 0) == 1,
     police = json.decode(GetConvar('inventory:police', '["police", "sheriff"]')),
-    persistent_items = GetConvarInt('inventory:persistent_items', 0) == 1 -- for REDM only
+    persistent_items = GetConvarInt('inventory:persistent_items', 1) == 1 -- for REDM only
 }
 
 do
@@ -46,7 +46,7 @@ if IsDuplicityVersion() then
         randomprices = GetConvarInt('inventory:randomprices', 0) == 1,
         randomloot = GetConvarInt('inventory:randomloot', 1) == 1,
         evidencegrade = GetConvarInt('inventory:evidencegrade', 2),
-        trimplate = GetConvarInt('inventory:trimplate', 1) == 1,
+        trimplate = GetConvarInt('inventory:trimplate', 0) == 1,
         vehicleloot = json.decode(GetConvar('inventory:vehicleloot', [[
 			[
 				["cola", 1, 1],
@@ -88,7 +88,7 @@ else
         giveplayerlist = GetConvarInt('inventory:giveplayerlist', 0) == 1,
         weaponanims = GetConvarInt('inventory:weaponanims', 1) == 1,
         itemnotify = GetConvarInt('inventory:itemnotify', 1) == 1,
-        weaponnotify = GetConvarInt('inventory:weaponnotify', 1) == 1,
+        weaponnotify = GetConvarInt('inventory:weaponnotify', 0) == 1,
         imagepath = GetConvar('inventory:imagepath', 'nui://ox_inventory/web/images'),
         dropprops = GetConvarInt('inventory:dropprops', 0) == 1,
         dropmodel = joaat(GetConvar('inventory:dropmodel', 'prop_med_bag_01b')),

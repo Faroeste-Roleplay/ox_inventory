@@ -198,14 +198,15 @@ function Utils.CreateBlip(settings, coords)
 	end
 
 	if IS_RDR3 then
-		blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, coords.x, coords.y, coords.z)
-		SetBlipSprite(blip, settings.id, 1);
+		-- blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, coords.x, coords.y, coords.z)
+		-- SetBlipSprite(blip, settings.id, 1);
 
-		local blipColor = settings.colour and GetHashKey(settings.colour) or `BLIP_MODIFIER_MP_COLOR_32`
-		Citizen.InvokeNative(0x662D364ABF16DE2F, blip, blipColor);
+		-- local blipColor = settings.colour and GetHashKey(settings.colour) or `BLIP_MODIFIER_MP_COLOR_32`
+		-- Citizen.InvokeNative(0x662D364ABF16DE2F, blip, blipColor);
 
-		local varString = CreateVarString(10, 'LITERAL_STRING', settings.name);
-		Citizen.InvokeNative(0x9CB1A1623062F402, blip, varString)
+		-- local varString = CreateVarString(10, 'LITERAL_STRING', settings.name);
+		-- Citizen.InvokeNative(0x9CB1A1623062F402, blip, varString)
+		-- SetBlipSprite(blip, `blip_shop_market_stall`, 1);
 	end
 
 	return blip
