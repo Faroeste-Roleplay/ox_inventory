@@ -28,16 +28,16 @@ const SlotTooltip: React.ForwardRefRenderFunction<
           <div className="tooltip-header-wrapper">
             <p>{item.name}</p>
             <p>
-                {item.weight > 0
-                  ? item.weight >= 1000
-                    ? `${(item.weight / 1000).toLocaleString('en-us', {
-                        minimumFractionDigits: 2,
-                      })}kg `
-                    : `${item.weight.toLocaleString('en-us', {
-                        minimumFractionDigits: 0,
-                      })}g `
-                  : ''}
-              </p>
+              {item.weight > 0
+                ? item.weight >= 1000
+                  ? `${(item.weight / 1000).toLocaleString('en-us', {
+                    minimumFractionDigits: 2,
+                  })}kg `
+                  : `${item.weight.toLocaleString('en-us', {
+                    minimumFractionDigits: 0,
+                  })}g `
+                : ''}
+            </p>
           </div>
           <Divider />
         </div>
@@ -45,6 +45,7 @@ const SlotTooltip: React.ForwardRefRenderFunction<
         <div style={{ ...style }} className="tooltip-wrapper" ref={ref}>
           <div className="tooltip-header-wrapper">
             <p>{item.metadata?.label || itemData.label || item.name}</p>
+
             {inventoryType === 'crafting' ? (
               <div className="tooltip-crafting-duration">
                 <ClockIcon />
@@ -53,6 +54,18 @@ const SlotTooltip: React.ForwardRefRenderFunction<
             ) : (
               <p>{item.metadata?.type}</p>
             )}
+
+            <p>
+              {item.weight > 0
+                ? item.weight >= 1000
+                  ? `${(item.weight / 1000).toLocaleString('en-us', {
+                    minimumFractionDigits: 2,
+                  })}kg `
+                  : `${item.weight.toLocaleString('en-us', {
+                    minimumFractionDigits: 0,
+                  })}g `
+                : ''}
+            </p>
           </div>
           <Divider />
           {description && (
@@ -67,11 +80,11 @@ const SlotTooltip: React.ForwardRefRenderFunction<
                   {Locale.ui_durability}: {Math.trunc(item.durability)}
                 </p>
               )
-              : item.degradation !== undefined && (
-                <p>
-                  {Locale.ui_durability}: {Math.trunc(item.degradation)}
-                </p>
-              )}
+                : item.degradation !== undefined && (
+                  <p>
+                    {Locale.ui_durability}: {Math.trunc(item.degradation)}
+                  </p>
+                )}
               {item.metadata?.ammo !== undefined && (
                 <p>
                   {Locale.ui_ammo}: {item.metadata.ammo}
@@ -122,8 +135,8 @@ const SlotTooltip: React.ForwardRefRenderFunction<
                         {count >= 1
                           ? `${count}x ${Items[item]?.label || item}`
                           : count === 0
-                          ? `${Items[item]?.label || item}`
-                          : count < 1 && `${count * 100}% ${Items[item]?.label || item}`}
+                            ? `${Items[item]?.label || item}`
+                            : count < 1 && `${count * 100}% ${Items[item]?.label || item}`}
                       </p>
                     </div>
                   );

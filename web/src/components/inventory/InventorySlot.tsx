@@ -195,7 +195,8 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
                     })}g `
                   : ''}
               </p>
-              {isWeapon
+
+              { isWeapon && inventoryType !== 'shop'               
                 ? <span> {item.metadata?.ammo}/{item.metadata?.ammoMaxClip ?? item.metadata?.ammo}</span>
                 : <span>{item.count > 1 ? item.name == "money" ? `${(item.count / 100).toFixed(2)}` : item.count.toLocaleString('en-us') : ''}</span>
               }
