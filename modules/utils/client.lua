@@ -76,6 +76,10 @@ function Utils.Notify(data)
 	lib.notify(data)
 end
 
+function lib.notify(data)
+	cAPI.Notify(data.type, data.description)
+end
+
 RegisterNetEvent('ox_inventory:notify', Utils.Notify)
 exports('notify', Utils.Notify)
 

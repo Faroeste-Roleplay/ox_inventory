@@ -76,6 +76,7 @@ local function canOpenTarget(ped)
 	or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_base', 3)
 	or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_enter', 3)
 	or IsEntityPlayingAnim(ped, 'random@mugging3', 'handsup_standing_base', 3)
+	or IsEntityPlayingAnim(ped, 'script_proc@robberies@shop@rhodes@gunsmith@inside_upstairs', 'handsup_register_owner', 3)
 end
 
 local defaultInventory = {
@@ -900,7 +901,11 @@ local function registerCommands()
 			return client.closeInventory()
 		end
 
-		if cache.vehicle or currentInteractedEntityId then
+		if currentInteractedEntityId and IsThisModelAHorse( GetEntityModel( currentInteractedEntityId ) ) == 1 then
+			return openGlovebox( cache.vehicle or currentInteractedEntityId )
+		end
+
+		if cache.vehicle then
 			return openGlovebox( cache.vehicle or currentInteractedEntityId )
 		end
 
@@ -916,6 +921,10 @@ local function registerCommands()
 
 		return client.openInventory()
 	end
+
+	RegisterCommand("openinv", function()
+		tryOpenInventory()
+	end)
 
 	local function tryOpenSecondaryInventory(self)
 		if IS_GTAV then
@@ -1051,28 +1060,28 @@ local function registerCommands()
 					1, --[[ Hotkey ]]
 					{
 						`INPUT_SELECT_QUICKSELECT_SIDEARMS_LEFT`, --[[ Botão padrão ]]
-						`INPUT_EMOTE_DANCE`, --[[ Botão usado para quando o menu de ação está aberto ]]
+						-- `INPUT_EMOTE_DANCE`, --[[ Botão usado para quando o menu de ação está aberto ]]
 					},
 				},
 				{
 					2,
 					{
 						`INPUT_SELECT_QUICKSELECT_DUALWIELD`,
-						`INPUT_EMOTE_GREET`,
+						-- `INPUT_EMOTE_GREET`,
 					},
 				},
 				{
 					3,
 					{
 						`INPUT_SELECT_QUICKSELECT_SIDEARMS_RIGHT`,
-						`INPUT_EMOTE_COMM`,
+						-- `INPUT_EMOTE_COMM`,
 					},
 				},
 				{
 					4,
 					{
 						`INPUT_SELECT_QUICKSELECT_UNARMED`,
-						`INPUT_EMOTE_TAUNT`,
+						-- `INPUT_EMOTE_TAUNT`,
 					},
 				},
 				{
@@ -1291,7 +1300,16 @@ end)
 local function nearbyDrop(point)
 	if not point.instance or point.instance == currentInstance then
 		---@diagnostic disable-next-line: param-type-mismatch
-		DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 150, 30, 30, 222, false, false, 0, true, false, false, false)
+		
+		if IS_GTAV then
+			DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 150, 30, 30, 222, false, false, 0, true, false, false, false)
+		end
+
+		if IS_RDR3 then
+			Citizen.InvokeNative(0x2A32FAA57B937173, 0x07DCE236, point.coords.x, point.coords.y, point.coords.z - 0.85, 0,0,0,0,0,0,0.15, 0.15,1.0, 30, 150, 30, 222, 0, 0, 2, 0, 0, 0, 0)
+		end
+	
+	
 	end
 end
 
@@ -1783,7 +1801,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 							if currentAmmo < weaponAmmo then
 								currentAmmo = (weaponAmmo < currentAmmo) and 0 or currentAmmo
 								currentWeapon.metadata.ammo = currentAmmo
-								currentWeapon.metadata.durability = currentWeapon.metadata.durability - (durabilityDrain * math.abs((weaponAmmo or 0.1) - currentAmmo))
+								currentWeapon.metadata.durability = (currentWeapon.metadata.durability or 100) - (durabilityDrain * math.abs((weaponAmmo or 0.1) - currentAmmo))
 							end
 						end
 

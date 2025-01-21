@@ -9,6 +9,8 @@ local Items = require 'modules.items.server'
 Tunnel.bindInterface("inventory", Inventory)
 Proxy.addInterface("inventory", Inventory)
 
+Business = Proxy.getInterface("business")
+
 AddEventHandler('FRP:ReleaseCharacter', function(playerId)
 	server.playerDropped(playerId)
 end)
@@ -25,11 +27,12 @@ local function setupPlayer(User, charId)
 	PlayerData.slots = Player.Inventory.slots
 	PlayerData.weight = Player.Inventory.weight
 	PlayerData.identifier = charId or Player.id
+	PlayerData.citizenId = Player.citizenId
 
 	shared.playerslots = Player.Inventory.slots
 	shared.playerweight = Player.Inventory.weight
 
-	PlayerData.name = ('%s %s'):format(Player.firstName, Player.lastName)
+	PlayerData.name = ('%s %s (%s)'):format(Player.firstName, Player.lastName, Player.citizenId)
 	server.setPlayerInventory(PlayerData)
 end
 

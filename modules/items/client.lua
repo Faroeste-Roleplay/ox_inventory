@@ -289,7 +289,7 @@ local horsesfoods = {
 	'hay',
 	'herb_wild_carrot',
 	'carrot',
-	'herb_corn',
+	'corn',
 	'tomato',
 }
 
@@ -307,6 +307,7 @@ Citizen.CreateThread(function()
 		end)
     end
 end)
+
 
 local consumables = {
 	"water",

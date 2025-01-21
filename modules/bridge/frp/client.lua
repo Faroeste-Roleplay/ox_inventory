@@ -8,6 +8,9 @@ local Weapon = require 'modules.weapon.client'
 cAPI = Proxy.getInterface("API")
 Tunnel.bindInterface("inventory", Inventory)
 
+
+Business = exports.business
+
 RegisterNetEvent('FRP:onCharacterLogout', client.onLogout)
 
 ---@diagnostic disable-next-line: duplicate-set-field

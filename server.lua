@@ -26,6 +26,17 @@ function server.setPlayerInventory(player, data)
 		data = db.loadPlayer(player.identifier)
 	end
 
+	
+	local playerInventoryConfig = shared.prime.user
+
+	for groupName, _ in pairs(shared.prime) do 
+		if API.IsCharacterAceAllowedGroup( player.identifier, groupName ) then
+			if shared.prime[groupName] then
+				playerInventoryConfig = shared.prime[groupName]
+			end
+		end
+	end
+
 	local inventory = {}
 	local totalWeight = 0
 
@@ -66,7 +77,7 @@ function server.setPlayerInventory(player, data)
 	end
 
 	player.source = tonumber(player.source)
-	local inv = Inventory.Create(player.source, player.name, 'player', shared.playerslots, totalWeight, shared.playerweight, player.identifier, inventory)
+	local inv = Inventory.Create(player.source, player.name, 'player', playerInventoryConfig.MaxSlots, totalWeight, playerInventoryConfig.MaxWeight, player.identifier, inventory)
 
 	if inv then
 		inv.player = server.setPlayerData(player)
@@ -631,4 +642,32 @@ lib.addCommand('viewinv', {
 	restricted = 'group.admin',
 }, function(source, args)
 	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
+end)
+
+
+
+RegisterNetEvent("inventory:server:RemoveDurability", function(slot, durability)
+	local playerId = source
+
+	if not playerId then
+		return
+	end
+
+	local slotKey = slot.slot
+
+	local itemInfo = Items(slot.name)
+
+	local itemInfoDegrade = itemInfo.degrade
+
+	local item = Inventory(playerId).items[slotKey]
+
+	local changePercentage = (durability / 100)
+
+	local change = (60 * itemInfoDegrade) * changePercentage
+
+	local prevDurability = item.metadata.durability
+
+	local newDurability = prevDurability - change
+
+	Inventory.SetDurability(playerId, slotKey, newDurability)
 end)

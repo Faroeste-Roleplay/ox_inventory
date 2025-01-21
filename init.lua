@@ -19,7 +19,20 @@ shared = {
     playerweight = GetConvarInt('inventory:weight', 30000),
     target = GetConvarInt('inventory:target', 0) == 1,
     police = json.decode(GetConvar('inventory:police', '["police", "sheriff"]')),
-    persistent_items = GetConvarInt('inventory:persistent_items', 1) == 1 -- for REDM only
+    persistent_items = GetConvarInt('inventory:persistent_items', 0) == 1 -- for REDM only
+}
+
+shared.prime = {
+    ["user"]        = {     MaxWeight = 25000,  MaxSlots = 20    },
+
+    ["bronze"]      = {     MaxWeight = 30000,  MaxSlots = 25    },
+    ["silver"]       = {     MaxWeight = 40000,  MaxSlots = 30    },
+    ["gold"]        = {     MaxWeight = 50000,  MaxSlots = 40    },
+    ["platinum"]     = {     MaxWeight = 55000,  MaxSlots = 45    },
+    ["diamond"]    = {     MaxWeight = 60000,  MaxSlots = 50    },
+
+    ["admin"]       = {     MaxWeight = 60000,  MaxSlots = 50    },
+    ["moderator"]   = {     MaxWeight = 60000,  MaxSlots = 50    },
 }
 
 do

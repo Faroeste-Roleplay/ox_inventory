@@ -72,6 +72,15 @@ return {
 		weight = 3500,
 		degrade = 2880, -- dois dias
 	},
+	
+	["shovel"] = {
+		type = 'Generic',
+		label = "Pá",
+		description = "Normalmente utilizado para cavar buracos",
+		weight = 3500,
+		degrade = 2880, -- dois dias
+	},
+
     ["axe"] = {
 		type = 'Generic',
 		label = "Machado",
@@ -144,5 +153,11 @@ return {
 		label = "Picareta sem fio",
 		description = "Arma branca sem Fio",
 		weight = 500,
+	},
+	["rake"] = {
+		type = 'Generic',
+		label = "Rastelo",
+		description = "Ferramenta agrícola manual usada para nivelar o solo",
+		weight = 400,
 	},
 }

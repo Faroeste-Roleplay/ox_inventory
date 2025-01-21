@@ -8,11 +8,19 @@ function server.hasGroup(inv, group)
 			if groupRank and groupRank >= (rank or 0) then
 				return name, groupRank
 			end
+
+			if Business.hasClassePermission(inv.player.citizenId, name) then
+				return name, rank
+			end
 		end
 	else
 		local groupRank = inv.player.groups[group]
 		if groupRank then
 			return group, groupRank
+		end
+
+		if Business.hasClassePermission(inv.player.citizenId, group) then
+			return group, 0
 		end
 	end
 end

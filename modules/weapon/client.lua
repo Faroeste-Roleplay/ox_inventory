@@ -340,78 +340,6 @@ if IS_RDR3 then
 
 	local equippedWeapons = {}
 	
-	function addWeapon(weapon, slot, id)
-		if slot == 0 and id then
-			if #equippedWeapons > 0 then
-				slot = 1
-			end
-		end
-		local weaponHash = GetHashKey(weapon)
-		local sHash = "SLOTID_WEAPON_"..tostring(slot)
-		local slotHash = GetHashKey(sHash)
-		local reason = GetHashKey("ADD_REASON_DEFAULT")
-		local inventoryId = 1
-		local move = false
-		
-		--Now add it to the characters inventory
-		local isValid = Citizen.InvokeNative(0x6D5D51B188333FD1, weaponHash, 0) --ItemdatabaseIsKeyValid
-		if not isValid then
-			print("Non valid weapon")
-			return false
-		end
-		
-		local characterItem = getGuidFromItemId(inventoryId, nil, GetHashKey("CHARACTER"), 0xA1212100) --return func_1367(joaat("CHARACTER"), func_2485(), -1591664384, bParam0);
-		if not characterItem then
-			print("no characterItem")
-			return false
-		end
-		
-		local weaponItem = getGuidFromItemId(inventoryId, characterItem:Buffer(), 923904168, -740156546) --return func_1367(923904168, func_1889(1), -740156546, 0);
-		if not weaponItem then
-			print("no weaponItem")
-			return false
-		end
-		
-		if slot == 1 and id then
-			if #equippedWeapons > 0 then
-				local newItemData = DataView.ArrayBuffer(8 * 13)
-				local newGUID = moveInventoryItem(inventoryId, equippedWeapons[1].guid, weaponItem:Buffer())
-				if not newGUID then
-					print("can't move item")
-					return false
-				end
-				slotHash = GetHashKey('SLOTID_WEAPON_0')
-				slot = 0
-				move = true
-			else
-				slotHash = GetHashKey('SLOTID_WEAPON_0')
-				slot = 0
-			end
-		end
-		
-		local itemData = DataView.ArrayBuffer(8 * 13)
-		local isAdded = Citizen.InvokeNative(0xCB5D11F9508A928D, inventoryId, itemData:Buffer(), weaponItem:Buffer(), weaponHash, slotHash, 1, reason) --Actually add the item now
-		if not isAdded then 
-			print("Not added")
-			return false
-		end
-		
-		local equipped = Citizen.InvokeNative(0x734311E2852760D0, inventoryId, itemData:Buffer(), true)
-		if not equipped then
-			print("no equip")
-			return false
-		end
-		
-		Citizen.InvokeNative(0x12FB95FE3D579238, PlayerPedId(), itemData:Buffer(), true, slot, false, false)
-		if move then
-			Citizen.InvokeNative(0x12FB95FE3D579238, PlayerPedId(), equippedWeapons[1].guid, true, 1, false, false)
-		end
-
-
-		
-		return true
-	end
-
 	local function givePlayerWeapon(id, weaponHash, itemData, attachPoint, moveWeapon)
 	
 		local addReason = GetHashKey("ADD_REASON_DEFAULT");
@@ -508,15 +436,101 @@ if IS_RDR3 then
 
 		return givePlayerWeapon(id, itemHash, itemData, attachPoint, moveWeapon);
 	end
+
+	function addWeapon(weapon, slot, id)
+		if slot == 0 and id then
+			if #equippedWeapons > 0 then
+				slot = 1
+			end
+		end
+		local weaponHash = GetHashKey(weapon)
+		local sHash = "SLOTID_WEAPON_"..tostring(slot)
+		local reason = GetHashKey("ADD_REASON_DEFAULT")
+		local inventoryId = 1
+		local slotHash = GetHashKey(sHash)
+		local move = false
+		
+		--Now add it to the characters inventory
+		local isValid = Citizen.InvokeNative(0x6D5D51B188333FD1, weaponHash, 0) --ItemdatabaseIsKeyValid
+		if not isValid then
+			print("Non valid weapon")
+			return false
+		end
+		
+		local characterItem = getGuidFromItemId(inventoryId, nil, GetHashKey("CHARACTER"), 0xA1212100) --return func_1367(joaat("CHARACTER"), func_2485(), -1591664384, bParam0);
+		if not characterItem then
+			print("no characterItem")
+			return false
+		end
+		
+		local weaponItem = getGuidFromItemId(inventoryId, characterItem:Buffer(), 923904168, -740156546) --return func_1367(923904168, func_1889(1), -740156546, 0);
+		if not weaponItem then
+			print("no weaponItem")
+			return false
+		end
+		
+		if slot == 1 and id then
+			if #equippedWeapons > 0 then
+				local newItemData = DataView.ArrayBuffer(8 * 13)
+				local newGUID = moveInventoryItem(inventoryId, equippedWeapons[1].guid, weaponItem:Buffer())
+				if not newGUID then
+					print("can't move item")
+					return false
+				end
+				slotHash = GetHashKey('SLOTID_WEAPON_0')
+				slot = 0
+				move = true
+			else
+				slotHash = GetHashKey('SLOTID_WEAPON_0')
+				slot = 0
+			end
+		end
+		
+		local itemData = DataView.ArrayBuffer(8 * 13)
+		local isAdded = Citizen.InvokeNative(0xCB5D11F9508A928D, inventoryId, itemData:Buffer(), weaponItem:Buffer(), weaponHash, slotHash, 1, reason) --Actually add the item now
+		if not isAdded then 
+			print("Not added")
+			return false
+		end
+		
+		local equipped = Citizen.InvokeNative(0x734311E2852760D0, inventoryId, itemData:Buffer(), true)
+		if not equipped then
+			print("no equip")
+			return false
+		end
+		
+		Citizen.InvokeNative(0x12FB95FE3D579238, PlayerPedId(), itemData:Buffer(), true, slot, false, false)
+		if move then
+			Citizen.InvokeNative(0x12FB95FE3D579238, PlayerPedId(), equippedWeapons[1].guid, true, 1, false, false)
+		end
+		if id then
+			local nWeapon = {
+				id = id,
+				guid = itemData:Buffer(),
+			}
+			table.insert(equippedWeapons, nWeapon)
+		end
+		
+		return true
+	end
 	
 	local attachOriginal = true
 	RegisterNetEvent("ox_inventory:ReplaceAttachPoint", function(item, attachPoint)
 		local id = equippedWeapons[1] and 2 or 1
 		local slot = attachPoint == 2 and 0 or 1
 
-		addWardrobeInventoryItem(id, slot, item.name, attachPoint)
+		addWeapon(item.name, slot, id)
+		-- addWardrobeInventoryItem(id, slot, item.name, attachPoint)
 		-- #TODO: Checar se o player tem dois coldres e só depois de ter duas armas adicionar como DualWield Ativo
 		-- Citizen.InvokeNative(PlayerPedId(), true);
+	end)
+
+	RegisterCommand("dual", function()
+
+		addWardrobeInventoryItem("CLOTHING_ITEM_M_OFFHAND_000_TINT_004", 0xF20B6B4A);
+		addWardrobeInventoryItem("UPGRADE_OFFHAND_HOLSTER", 0x39E57B01);
+		addWeapon('WEAPON_SHOTGUN_SAWEDOFF', 0, 1)
+		addWeapon('WEAPON_SHOTGUN_SAWEDOFF', 1, 2)
 	end)
 	
 	AddEventHandler("ox_inventory:ReplaceCurrentAttachPoint", function(itemSlot)	

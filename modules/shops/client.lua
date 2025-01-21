@@ -138,7 +138,7 @@ local function createShopPrompt(point)
 			:setText(('Abrir %s'):format(point.label))
 			:setMode('Hold', 500)
 			:setPoint(vector3(point.coords.x, point.coords.y, point.coords.z))
-			:setRadius(4.0)
+			:setRadius(2.0)
 			:build()
 	end
 end
@@ -234,7 +234,7 @@ local function refreshShops()
 
 				shops[id] = lib.points.new(coords, 16, {
 					coords = coords,
-					distance = 16,
+					distance = 2.0,
 					inv = 'shop',
 					invId = i,
 					type = type,
@@ -252,7 +252,12 @@ local function refreshShops()
 	end
 end
 
+AddEventHandler('ox_inventory:openShop', function(data)
+	client.openInventory('shop', data)
+end)
+
 return {
 	refreshShops = refreshShops,
 	wipeShops = wipeShops,
 }
+

@@ -59,12 +59,6 @@ return {
 		weight = 40,
 		-- image = "common_bullrush",    
 	},
-	["herb_corn"] = {
-		type = 'Generic',
-		label = "Milho",
-		description = "",
-		weight = 40,  
-	},
 	["herb_creeping_thyme"] = {
 		type = 'Generic',
 		label = "Serpilho",

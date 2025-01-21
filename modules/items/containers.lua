@@ -51,16 +51,17 @@ local function setContainerProperties(itemName, properties)
 	}
 end
 
-setContainerProperties('paperbag', {
+setContainerProperties('ammo_case', {
 	slots = 5,
-	maxWeight = 1000,
-	blacklist = { 'testburger' }
-})
-
-setContainerProperties('pizzabox', {
-	slots = 5,
-	maxWeight = 1000,
-	whitelist = { 'pizza' }
+	maxWeight = 3000,
+	whitelist = { 
+		['ammo_revolver'] = true,
+		['ammo_revolver_express_explosive'] = true,
+		['ammo_pistol'] = true,
+		['ammo_shotgun'] = true,
+		['ammo_repeater'] = true,
+		['ammo_rifle'] = true
+	}
 })
 
 return containers

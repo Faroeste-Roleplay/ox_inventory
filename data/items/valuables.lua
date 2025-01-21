@@ -4,8 +4,14 @@ return {
 		label = "Dólar",                                            
 		description = "Uma nota de valor, pode ser usada para comprar diversos itens. É a moeda da economia.",
 		prop = "p_moneystack01x",
-	},	
+	},
 	
+	["gold"] = {
+		type = 'Generic',  
+		label = "Gold",                                            
+		description = "",
+	},
+
 	["capitale"] = {
 		type = 'Generic',  
 		label = "Capitale",                                            

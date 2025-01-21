@@ -148,6 +148,7 @@ end
 
 local itemsListByType =
 {
+	'container',
 	'drugs',
 	'fishing',
 	'foods',

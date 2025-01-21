@@ -12,14 +12,23 @@ function client.hasGroup(group)
 	if type(group) == 'table' then
 		for name, rank in pairs(group) do
 			local groupRank = PlayerData.groups[name]
+
 			if groupRank and groupRank >= (rank or 0) then
 				return name, groupRank
+			end
+
+            if Business:hasClassePermission(name) then
+				return name, rank
 			end
 		end
 	else
 		local groupRank = PlayerData.groups[group]
 		if groupRank then
 			return group, groupRank
+		end
+
+		if Business:hasClassePermission(group) then
+			return group, 0
 		end
 	end
 end
