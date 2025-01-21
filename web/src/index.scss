@@ -31,6 +31,7 @@ $gridRows: 5;
 $gridSize: 7.3vh;
 $gridGap: 3.7px;
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
+$containerSizeMinimal: calc(#{2} * #{$gridSize + 0.22vh} + #{2} * #{$gridGap});
 
 body {
   margin: 0;
@@ -372,7 +373,7 @@ button:active {
 
 .inventory-slot-label-box {
   display: block;
-  text-align: right;
+  text-align: center;
   border-bottom-left-radius: 0.25vh;
   border-bottom-right-radius: 0.25vh;
   // border-top-color: rgba(0, 0, 0, 0.2);
@@ -385,6 +386,7 @@ button:active {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 2px 3px;
+  margin-top: -5px;
   font-weight: 400;
   font-family: $secondFont;
   text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
@@ -589,7 +591,7 @@ button:active {
   justify-content: center;
   width: 100%;
   position: absolute;
-  bottom: 2vh;
+  bottom: 3vh;
 }
 
 .hotbar-item-slot {
