@@ -12,6 +12,10 @@ function server.hasGroup(inv, group)
 			if Business.hasClassePermission(inv.player.citizenId, name) then
 				return name, rank
 			end
+
+			if API.IsPlayerAceAllowedGroup( inv.player.source, name ) then
+				return name, 0
+			end
 		end
 	else
 		local groupRank = inv.player.groups[group]
@@ -20,6 +24,10 @@ function server.hasGroup(inv, group)
 		end
 
 		if Business.hasClassePermission(inv.player.citizenId, group) then
+			return group, 0
+		end
+	
+		if API.IsPlayerAceAllowedGroup( inv.player.source, group ) then
 			return group, 0
 		end
 	end
@@ -35,6 +43,7 @@ function server.setPlayerData(player)
 		source = player.source,
 		name = player.name,
 		groups = player.groups or {},
+		citizenId = player.citizenId,
 		sex = player.sex,
 		dateofbirth = player.dateofbirth,
 	}

@@ -17,7 +17,13 @@ function client.hasGroup(group)
 				return name, groupRank
 			end
 
-            if Business:hasClassePermission(name) then
+			local gradePermission = type(rank) == "string" and rank or nil
+
+			if Business.hasClassePermission(name, gradePermission) then
+				return name, rank
+			end
+
+			if API.IsPlayerAceAllowedGroup( PlayerData.source, name ) then
 				return name, rank
 			end
 		end
@@ -27,7 +33,13 @@ function client.hasGroup(group)
 			return group, groupRank
 		end
 
-		if Business:hasClassePermission(group) then
+		local gradePermission = type(groupRank) == "string" and groupRank or nil
+
+		if Business.hasClassePermission(group, gradePermission) then
+			return group, 0
+		end
+
+		if API.IsPlayerAceAllowedGroup( PlayerData.source, group ) then
 			return group, 0
 		end
 	end

@@ -5,11 +5,12 @@ local Inventory = require 'modules.inventory.client'
 local Weapon = require 'modules.weapon.client'
 
 
+API = Tunnel.getInterface("API")
 cAPI = Proxy.getInterface("API")
 Tunnel.bindInterface("inventory", Inventory)
 
 
-Business = exports.business
+Business = Proxy.getInterface("business")
 
 RegisterNetEvent('FRP:onCharacterLogout', client.onLogout)
 
