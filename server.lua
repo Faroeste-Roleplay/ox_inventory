@@ -495,7 +495,7 @@ end, true)
 lib.addCommand({'additem', 'giveitem'}, {
 	help = 'Gives an item to a player with the given id',
 	params = {
-		{ name = 'target', type = 'playerId', help = 'The player to receive the item' },
+		{ name = 'target', type = 'number', help = 'The player to receive the item' },
 		{ name = 'item', type = 'string', help = 'The name of the item' },
 		{ name = 'count', type = 'number', help = 'The amount of the item to give', optional = true },
 		{ name = 'type', help = 'Sets the "type" metadata to the value', optional = true },
@@ -504,13 +504,22 @@ lib.addCommand({'additem', 'giveitem'}, {
 }, function(source, args)
 
 	local item = Items(args.item)
+
 	if item then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+		local User = API.GetUserFromUserId( tonumber( args.target ) )
+
+		if not User then
+			return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+		end
+
+		local targetSource = User:GetSource()
+
+		local inventory = Inventory(targetSource) --[[@as OxInventory]]
 		local count = args.count or 1
 		local success, response = Inventory.AddItem(inventory, item.name, count, args.type and { type = tonumber(args.type) or args.type })
 
 		if not success then
-			return Citizen.Trace(('Failed to give %sx %s to player %s (%s)'):format(count, item.name, args.target, response))
+			return Citizen.Trace(('Failed to give %sx %s to player %s (%s)'):format(count, item.name, targetSource, response))
 		end
 
 		source = Inventory(source) or { label = 'console', owner = 'console' }
@@ -524,7 +533,7 @@ end)
 lib.addCommand('removeitem', {
 	help = 'Removes an item to a player with the given id',
 	params = {
-		{ name = 'target', type = 'playerId', help = 'The player to remove the item from' },
+		{ name = 'target', type = 'number', help = 'The player to remove the item from' },
 		{ name = 'item', type = 'string', help = 'The name of the item' },
 		{ name = 'count', type = 'number', help = 'The amount of the item to take' },
 		{ name = 'type', help = 'Only remove items with a matching metadata "type"', optional = true },
@@ -534,7 +543,16 @@ lib.addCommand('removeitem', {
 	local item = Items(args.item)
 
 	if item and args.count > 0 then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+
+		local User = API.GetUserFromUserId( tonumber( args.target ) )
+
+		if not User then
+			return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+		end
+
+		local targetSource = User:GetSource()
+
+		local inventory = Inventory( targetSource ) --[[@as OxInventory]]
 		local success, response = Inventory.RemoveItem(inventory, item.name, args.count, args.type and { type = tonumber(args.type) or args.type }, nil, true)
 
 		if not success then
@@ -552,7 +570,7 @@ end)
 lib.addCommand('setitem', {
 	help = 'Sets the item count for a player, removing or adding as needed',
 	params = {
-		{ name = 'target', type = 'playerId', help = 'The player to set the items for' },
+		{ name = 'target', type = 'number', help = 'The player to set the items for' },
 		{ name = 'item', type = 'string', help = 'The name of the item' },
 		{ name = 'count', type = 'number', help = 'The amount of items to set', optional = true },
 		{ name = 'type', help = 'Add or remove items with the metadata "type"', optional = true },
@@ -562,7 +580,15 @@ lib.addCommand('setitem', {
 	local item = Items(args.item)
 
 	if item then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+		local User = API.GetUserFromUserId(  args.target  )
+
+		if not User then
+			return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+		end
+
+		local targetSource = User:GetSource()
+
+		local inventory = Inventory( targetSource ) --[[@as OxInventory]]
 		local success, response = Inventory.SetItem(inventory, item.name, args.count or 0, args.type and { type = tonumber(args.type) or args.type })
 
 		if not success then
@@ -597,17 +623,25 @@ end)
 lib.addCommand('takeinv', {
 	help = 'Confiscates the target inventory, to restore with /restoreinv',
 	params = {
-		{ name = 'target', type = 'playerId', help = 'The player to confiscate items from' },
+		{ name = 'target', type = 'number', help = 'The player to confiscate items from' },
 	},
 	restricted = 'group.admin',
 }, function(source, args)
-	Inventory.Confiscate(args.target)
+	local User = API.GetUserFromUserId( tonumber( args.target ) )
+
+	if not User then
+		return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+	end
+
+	local targetSource = User:GetSource()
+
+	Inventory.Confiscate( targetSource )
 end)
 
 lib.addCommand({'restoreinv', 'returninv'}, {
 	help = 'Restores a previously confiscated inventory for the target',
 	params = {
-		{ name = 'target', type = 'playerId', help = 'The player to restore items to' },
+		{ name = 'target', type = 'number', help = 'The player to restore items to' },
 	},
 	restricted = 'group.admin',
 }, function(source, args)
@@ -617,11 +651,19 @@ end)
 lib.addCommand('clearinv', {
 	help = 'Wipes all items from the target inventory',
 	params = {
-		{ name = 'invId', help = 'The inventory to wipe items from' },
+		{ name = 'target', type = "number", help = 'The inventory to wipe items from' },
 	},
 	restricted = 'group.admin',
 }, function(source, args)
-	Inventory.Clear(tonumber(args.invId) or args.invId == 'me' and source or args.invId)
+	local User = API.GetUserFromUserId( tonumber( args.target ) or source )
+
+	if not User then
+		return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+	end
+
+	local targetSource = User:GetSource()
+
+	Inventory.Clear(targetSource)
 end)
 
 lib.addCommand('saveinv', {
@@ -641,13 +683,21 @@ lib.addCommand('viewinv', {
 	},
 	restricted = 'group.admin',
 }, function(source, args)
-	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
+
+
+	local User = API.GetUserFromUserId( tonumber( args.target ) )
+
+	if not User then
+		return Citizen.Trace(('Usuário inválido %s'):format(args.target))
+	end
+
+	local targetSource = User:GetSource()
+
+	Inventory.InspectInventory(source, targetSource)
 end)
 
-
-
-RegisterNetEvent("inventory:server:RemoveDurability", function(slot, durability)
-	local playerId = source
+RegisterNetEvent("inventory:server:RemoveDurability", function(slot, durability, playerId)
+	local playerId = playerId or source
 
 	if not playerId then
 		return
