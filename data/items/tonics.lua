@@ -23,6 +23,8 @@ return {
 		weight = 150,
 		description = "Consumir dá experiência à saúde",
 	},
+
+
     ['tonic_health_care'] = {
 		type = 'Generic',
 		label = 'Tônico de Saúde',
@@ -41,6 +43,14 @@ return {
 		weight = 150,
 		description = "Restaura totalmente tudo e ligeiramente os fortalece",
 	},
+	['tonic_horse_care'] = {
+		type = 'Generic',
+		label = 'Tônico de Cavalo',
+		weight = 150,
+		description = "Restaurar a saúde do cavalo e fortifificá-lo ligeiramente",
+	},
+
+
     ['tonic_potent_cure'] = {
 		type = 'Generic',
 		label = 'Tônico de Cura Fraco',
@@ -58,13 +68,6 @@ return {
 		["weight"] = 700,
 		consume = 0,
 		server = { export = 'frp_death_state.itemTonic' },
-	},
-
-	['tonic_horse_care'] = {
-		type = 'Generic',
-		label = 'Tônico de Cavalo',
-		weight = 150,
-		description = "Restaurar a saúde do cavalo e fortifificá-lo ligeiramente",
 	},
 
     ['tonic_horse_reviver'] = {

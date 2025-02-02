@@ -231,13 +231,6 @@ return {
 		consume = 0
 	},
 
-	["sack_empty"] = {
-		type = 'Generic',
-		label = "Saco Vazio",
-		description = "Saco vazio",
-		weight = 50,
-		-- image = "saco_vazio",
-	},
 	["line"] = {
 		type = 'Generic',
 		label = "Linha",

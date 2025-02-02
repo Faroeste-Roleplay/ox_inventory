@@ -221,12 +221,6 @@ return {
 		description = "",
 		weight = 3000,
 	}, 
-	["provision_buck_antlers"] = {
-		type = 'Generic',
-		label = "Chifre de Bufallo",
-		description = "",
-		weight = 3000,
-	}, 
 	["provision_wolf_heart"] = {
 		type = 'Generic',
 		label = "Coração de Lobo",

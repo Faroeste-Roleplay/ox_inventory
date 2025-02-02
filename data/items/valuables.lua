@@ -30,8 +30,7 @@ return {
 		type = 'Generic',  
 		label = "Dente de Ouro",                                    
 		description = "Um dente de ouro tirado de uma arcada dentária cara",
-		weight = 20,          
-		stack = false 
+		weight = 20,
 	},
 
 	["coin"] = {
@@ -101,11 +100,11 @@ return {
 		type = 'Generic',  
 		label = "Dinamite",                                    
 		description = "Um monte de dinamite",
-		weight = 200,         
+		weight = 200,
 	},
 	["emptybag"] = {
 		type = 'Generic',  
-		label = "Saco Vazio",                                    
+		label = "Saco Vazio",
 		description = "Saco de pano vazio",
 		weight = 200,         
 	},

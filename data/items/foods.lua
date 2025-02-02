@@ -20,7 +20,7 @@ return {
 		degrade = 10000,
 		weight = 500,
 		-- image = "enlatadodecarne",
-		 -- consume = 1
+		consume = 1
 	},
 	["canned_stew"] = {
         type = 'Generic',
@@ -29,7 +29,7 @@ return {
 		degrade = 10000,
 		weight = 500,
 		-- image = "enlatado_de_feijoada",
-		 -- consume = 1
+		consume = 1
 	},
 	["canned_corn"] = {
         type = 'Generic',
@@ -38,7 +38,7 @@ return {
 		degrade = 10000,
 		weight = 400,
 		-- image = "enlatado_de_milho",
-		 -- consume = 1
+		consume = 1
 	},
 	["refined_sugar"] = {
         type = 'Generic',
@@ -54,7 +54,7 @@ return {
 		degrade = 7000,
 		weight = 300,
 		-- image = "bolocenoura",
-		 -- consume = 1
+		consume = 1
 	},
 	["blackberry_cake"] = {
         type = 'Generic',
@@ -63,7 +63,7 @@ return {
 		degrade = 7000,
 		weight = 300,
 		-- image = "tortaamora",
-		 -- consume = 1
+		consume = 1
 	},
 	["cracker"] = {
         type = 'Generic',
@@ -72,7 +72,7 @@ return {
 		degrade = 7000,
 		weight = 300,
 		-- image = "bolacha",
-		 -- consume = 1
+		consume = 1
 	},
 	["biscuit"] = {
         type = 'Generic',
@@ -81,7 +81,7 @@ return {
 		degrade = 7000,
 		weight = 300,
 		-- image = "biscoito",
-		 -- consume = 1
+		consume = 1
 	},
 	["bread"] = {
         type = 'Generic',
@@ -90,7 +90,7 @@ return {
 		degrade = 7000,
 		weight = 100,
 		-- image = "bread",
-		 -- consume = 1
+		consume = 1
 	},
 	["oat_bread"] = {
         type = 'Generic',
@@ -99,7 +99,7 @@ return {
 		degrade = 7000,
 		weight = 400,
 		-- image = "paoaveia",
-		 -- consume = 1
+		consume = 1
 	},
 
 	["apple"] = {
@@ -108,7 +108,7 @@ return {
 		description = "De onde veio isso?",
 		degrade = 7000,
 		weight = 10,
-		 -- consume = 1
+		consume = 1
 	},
 	["tomato"] = {
         type = 'Generic',
@@ -116,7 +116,7 @@ return {
 		description = "Muito bom para usar como molho",
 		degrade = 7000,
 		weight = 10,
-		 -- consume = 1
+		consume = 1
 	},
 	["corn"] = {
         type = 'Generic',
@@ -124,7 +124,7 @@ return {
 		description = "Uma espiga saborosa",
 		degrade = 7000,
 		weight = 10,
-		--  -- consume = 1
+		-- consume = 1
 	},
 	["carrot"] = {
         type = 'Generic',
@@ -132,7 +132,7 @@ return {
 		description = "Faz bem pra vista",
 		degrade = 7000,
 		weight = 10,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["garlic"] = {
@@ -142,7 +142,7 @@ return {
 		degrade = 7000,
 		weight = 10,
 		-- image = "garlic",
-		 -- consume = 1
+		consume = 1
 	},
 	["lettuce"] = {
         type = 'Generic',
@@ -151,7 +151,7 @@ return {
 		degrade = 7000,
 		weight = 10,
 		-- image = "letuce",
-		 -- consume = 1
+		consume = 1
 	},
 	["potato"] = {
         type = 'Generic',
@@ -160,7 +160,7 @@ return {
 		degrade = 7000,
 		weight = 10,
 		-- image = "batata",
-		 -- consume = 1
+		consume = 1
 	},
 	["sugar"] = {
         type = 'Generic',
@@ -168,7 +168,7 @@ return {
 		description = "Torrões de açúcar, excelente para adoçar as coisas",
 		degrade = 7000,
 		weight = 1,
-		 -- consume = 1
+		consume = 1
 	},
 	["broccoli"] = {
         type = 'Generic',
@@ -177,7 +177,7 @@ return {
 		degrade = 3000,
 		weight = 10,
 		-- image = "brocolis",
-		 -- consume = 1
+		consume = 1
 	},
 
 	-- NOVOS ALIMENTOS
@@ -187,7 +187,7 @@ return {
 		description = "Ovos frescos, um bom ingrediente para bolos",
 		degrade = 7000,
 		weight = 20,
-		 -- consume = 1
+		consume = 1
 	},
 	["vanilla_essence"] = {
         type = 'Generic',
@@ -195,7 +195,7 @@ return {
 		description = "O cheiro disso é ótimo!",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["whip_cream"] = {
         type = 'Generic',
@@ -203,7 +203,7 @@ return {
 		description = "Pera, que? Bom, parece ser feito para confeitar",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["butter"] = {
         type = 'Generic', 
@@ -211,7 +211,7 @@ return {
 		description = "Um dos derivados do leite mais antigos! Ótimo para receitas.",
 		degrade = 7000,
 		weight = 300,
-		 -- consume = 1
+		consume = 1
 	},
 	["strawberry"] = {
         type = 'Generic',
@@ -219,7 +219,7 @@ return {
 		description = "Morango... É só um morango mesmo",
 		degrade = 7000,
 		weight = 20,
-		 -- consume = 1
+		consume = 1
 	},
 	["chocolate_syrup"] = {
         type = 'Generic',
@@ -227,7 +227,7 @@ return {
 		description = "Um bom xarope, não é pra beber, é pra usar em receitas!",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["washington_cake"] = {
         type = 'Generic',
@@ -235,7 +235,7 @@ return {
 		description = "O clássico de Washington, esse é um dos melhores!",
 		degrade = 7000,
 		weight = 50,
-		 -- consume = 1
+		consume = 1
 	},
 	["blackberry_pie"] = {
         type = 'Generic',
@@ -243,7 +243,7 @@ return {
 		description = "Macia, docinha e bem fresca! Bom para alimentar e desestressar",
 		degrade = 7000,
 		weight = 50,
-		 -- consume = 1
+		consume = 1
 	},
 	["boston_pie"] = {
         type = 'Generic',
@@ -251,7 +251,7 @@ return {
 		description = "A clássica torta de Boston, é uma das melhores!",
 		degrade = 7000,
 		weight = 50,
-		 -- consume = 1
+		consume = 1
 	},
 	["raspberry_juice"] = {
         type = 'Generic',
@@ -259,7 +259,7 @@ return {
 		description = "Nada como um suco docinho para começar o dia... ou terminar ele!",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["orange_juice"] = {
 		type = 'Generic',
@@ -267,7 +267,7 @@ return {
 		description = "Nada como um suco docinho para começar o dia e relaxar!",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["corn_juice"] = {
 		type = 'Generic',
@@ -275,7 +275,7 @@ return {
 		description = "Nada como um suco docinho para começar o dia... ou terminar ele!",
 		degrade = 7000,
 		weight = 100,
-		 -- consume = 1
+		consume = 1
 	},
 	["corn_cake"] = {
         type = 'Generic',
@@ -284,7 +284,7 @@ return {
 		degrade = 7000,
 		weight = 300,
 		-- image = "bolomilho",
-		 -- consume = 1
+		consume = 1
 	},
 	["coca_nut"] = {
         type = 'Generic',
@@ -292,7 +292,7 @@ return {
 		description = "Não coma isso puro",
 		degrade = 15000,
 		weight = 300,
-		 -- consume = 1
+		consume = 1
 	},
 	
 	-- BEBIDAS ALCOOLICAS
@@ -303,7 +303,7 @@ return {
 		degrade = 15000,
 		weight = 1000,
 		-- image = "Alcool",     
-		 -- consume = 1
+		consume = 1
 	},
 	["beer"] = {
         type = 'Generic',
@@ -312,7 +312,7 @@ return {
 		degrade = 15000,
 		weight = 700,
 		-- image = "cerveja",
-		 -- consume = 1
+		consume = 1
 	},
 	["whisky"] = {
         type = 'Generic',
@@ -320,7 +320,7 @@ return {
 		description = "Garrafa com whiskey",
 		weight = 700,
 		-- image = "whisky",
-		 -- consume = 1
+		consume = 1
 	},
 	["rum"] = {
         type = 'Generic',
@@ -328,7 +328,7 @@ return {
 		description = "A bebida favorita dos homens do mar",
 		degrade = 15000,
 		weight = 1300,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["sparkling_wine"] = {
@@ -338,7 +338,7 @@ return {
 		degrade = 15000,
 		weight = 600,
 		-- image = "consumable_ginseng_elixier",
-		 -- consume = 1
+		consume = 1
 	},
 	["vodka"] = {
         type = 'Generic',
@@ -346,7 +346,7 @@ return {
 		description = "Destilado original da Rússia",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["skane_liquor"] = {
         type = 'Generic',
@@ -354,7 +354,7 @@ return {
 		description = "Beber isso faz bem ou te mata, você só vai saber se tentar",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["chocolate_liquor"] = {
         type = 'Generic', 
@@ -362,7 +362,7 @@ return {
 		description = "Bebida alcoolica doce, ideal para relaxar em um ambiente tranquilo",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["chocolate_bar"] = {
         type = 'Generic', 
@@ -370,7 +370,7 @@ return {
 		description = "Bom para acalmar os animos",
 		degrade = 15000,
 		weight = 70,
-		 -- consume = 1
+		consume = 1
 	},
 	["champagne"] = {
         type = 'Generic',
@@ -378,7 +378,7 @@ return {
 		description = "Bebida alcoolica importada, parece muito caro",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["hidromel"] = {
         type = 'Generic',
@@ -386,7 +386,7 @@ return {
 		description = "Doce e forte, como um bom hidromel",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["saque"] = {
         type = 'Generic',
@@ -394,7 +394,7 @@ return {
 		description = "Bebida alcoolica importada, parece muito caro",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["arake"] = {
@@ -403,7 +403,7 @@ return {
 		description = "Bebida alcoolica importada, parece muito caro",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["absinto"] = {
@@ -412,7 +412,7 @@ return {
 		description = "Bebida alcoolica importada, parece muito caro",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 	["sidra"] = {
         type = 'Generic',
@@ -420,7 +420,7 @@ return {
 		description = "Bebida alcoolica importada, parece muito caro",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["gin"] = {
@@ -429,7 +429,7 @@ return {
 		description = "Bebida alcoolica doce, ideal para relaxar em um ambiente tranquilo",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["wine"] = {
@@ -438,7 +438,7 @@ return {
 		description = "Bebida alcoolica doce, ideal para relaxar em um ambiente tranquilo",
 		degrade = 15000,
 		weight = 700,
-		 -- consume = 1
+		consume = 1
 	},
 
 	-- BEBIDAS NÃO ALCOOLICAS                                                  
@@ -449,7 +449,7 @@ return {
 		degrade = 15000,
 		weight = 500,
 		-- image = "vitamina",
-		 -- consume = 1
+		consume = 1
 	},
 
 	["water"] = {
@@ -459,7 +459,7 @@ return {
 		degrade = 15000,
 		weight = 100,
 		-- image = "water",
-		 -- consume = 1
+		consume = 1
 	},
 	["blackberry_juice"] = {
         type = 'Generic',
@@ -468,7 +468,7 @@ return {
 		degrade = 15000,
 		weight = 300,
 		-- image = "sucoamora",
-		 -- consume = 1
+		consume = 1
 	},
 	["apple_juice"] = {
         type = 'Generic',
@@ -477,7 +477,7 @@ return {
 		degrade = 15000,
 		weight = 300,
 		-- image = "sucomaca",
-		 -- consume = 1
+		consume = 1
 	},
 
 	["bottle_milk"] = {
@@ -486,16 +486,7 @@ return {
 		description = "Garrafa cheia de leite",
 		degrade = 15000,
 		weight = 900,
-		 -- consume = 1
-	},
-
-	["glueglue"] = {
-        type = 'Generic',
-		label = "Cola Cola",
-		description = "Agua preta adocicada",
-		degrade = 15000,
-		weight = 600,
-		consume=  1
+		consume = 1
 	},
 
 	["colacola"] = {
@@ -512,7 +503,7 @@ return {
 		label = "Farinha de Milho",
 		description = "Saco com farinha de milho",
 		weight = 10,
-		 -- consume = 1
+		consume = 1
 	},
 
 	["grandmasstew"] = {
@@ -521,7 +512,7 @@ return {
 		description = "Sopa de legumes com cubos de carnes feito especialmente pela vovó",
 		degrade = 15000,
 		weight = 600,
-		consume=  1
+		consume = 1
 	},
 
 	["luxurymeal"] = {
@@ -530,7 +521,7 @@ return {
 		description = "Sopa de legumes com cubos de carnes",
 		degrade = 15000,
 		weight = 600,
-		consume=  1
+		consume = 1
 	},
 
 	["fullmeal"] = {
@@ -539,7 +530,7 @@ return {
 		description = "Sopa de legumes com cubos de carnes",
 		degrade = 15000,
 		weight = 600,
-		consume=  1
+		consume = 1
 	},
 	
 
@@ -549,7 +540,7 @@ return {
 		description = "",
 		degrade = 15000,
 		weight = 600,
-		consume=  1
+		consume = 1
 	},
 	
 	["applejuice"] = {
@@ -558,6 +549,6 @@ return {
 		description = "",
 		degrade = 15000,
 		weight = 600,
-		consume=  1
+		consume = 1
 	},
 }

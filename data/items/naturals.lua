@@ -59,33 +59,21 @@ return {
         weight = 1000
     },
 
-    ["ore_copper_nugget"] = {
+    ["ore_lead_nugget"] = {
 		type = 'Generic', 
-        label = "Pepita de Cobre",
-        description = "Muito valioso quando fundido",
-        weight = 400
-    },
-    ["ore_copper_ingot"] = {
-		type = 'Generic', 
-        label = "Lingote de Cobre",
+        label = "Pepita de Chumbo",
         description = "Muito valioso para venda",
-        weight = 2000,
-    },    
-    ["ore_copper_bar"] = {
+        weight = 900,
+    },
+
+    ["ore_silver_nugget"] = {
 		type = 'Generic', 
-        label = "Barra de Cobre",
+        label = "Pepita de Prata",
         description = "Muito valioso para venda",
         weight = 1000,
     },
 
     ["ore_diamond_nugget"] = {
-		type = 'Generic', 
-        label = "Diamante Bruto",
-        description = "Muito valioso quando lapidado",
-        weight = 150,
-    },
-
-    ["ore_diamond_nuggets"] = {
 		type = 'Generic', 
         label = "Framento de Diamantes",
         description = "Muito valioso quando lapidado",

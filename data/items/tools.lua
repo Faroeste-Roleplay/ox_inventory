@@ -39,7 +39,7 @@ return {
 		consume = 0,
 		degrade = 15000, -- dois dias
 		client = {
-			export = 'script_metabolism.inventoryUsedCompass',
+			export = 'manager_small_resources.inventoryUsedCompass',
 
 			remove = function(total)
 				if total <= 0 then
