@@ -35,6 +35,8 @@ local IsPedCuffed = IsPedCuffed
 local playerPed = cache.ped
 local currentInteractedEntityId
 
+gCanPlayerCloseInventory = true
+
 lib.onCache('ped', function(ped)
 	playerPed = ped
 	Utils.WeaponWheel()
@@ -194,7 +196,6 @@ function client.openInventory(inv, data)
 				return lib.notify({ id = 'inventory_right_access', type = 'error', description = locale('inventory_right_access') })
 			end
 		end
-
 
 		if inv == 'shop' and invOpen == false then
 			if cache.vehicle then
@@ -1167,6 +1168,9 @@ function client.closeInventory(server)
 		plyState.invOpen = false
 		defaultInventory.coords = nil
 		TriggerEvent("ox_inventory:closed")
+		
+		--[[ Resetar, o inventário foi fechado pelo próprio script. ]]
+		gCanPlayerCloseInventory = true
 	end
 end
 
@@ -1188,7 +1192,7 @@ local function updateInventory(data, weight)
 			local item = v.item
 
 			if currentWeapon?.slot == item?.slot then
-                if item.metadata then
+                if item?.metadata then
 				    currentWeapon.metadata = item.metadata
 				    TriggerEvent('ox_inventory:currentWeapon', currentWeapon)
                 else
@@ -2047,6 +2051,12 @@ RegisterNUICallback('useButton', function(data, cb)
 end)
 
 RegisterNUICallback('exit', function(_, cb)
+	
+	if not gCanPlayerCloseInventory then
+		cb(0)
+		return
+	end
+
 	client.closeInventory()
 	cb(1)
 end)
@@ -2138,38 +2148,260 @@ RegisterNUICallback('swapItems', function(data, cb)
 		end
 	end
 
-	local success, response, weaponSlot = lib.callback.await('ox_inventory:swapItems', false, data)
-    swapActive = false
+	StartInventoryAction('swap', data, function()
 
-	cb(success or false)
+		local success, response, weaponSlot = lib.callback.await('ox_inventory:swapItems', false, data)
 
-	if success then
-		--[[ Remove weapon completly from player if remove from hotbar]]
-		if IS_RDR3 then
-			local itemSlot = response and response?.items[1].item.slot or data.fromSlot
-			local item = PlayerData.inventory[itemSlot or data.fromSlot] 
+		swapActive = false
 
-			if item then
-				swapWeaponHotbar(item, data)
+		if success then
+
+			--[[ Remove weapon completly from player if remove from hotbar]]
+			if IS_RDR3 then
+				local itemSlot = response and response?.items[1].item.slot or data.fromSlot
+				local item = PlayerData.inventory[itemSlot or data.fromSlot] 
+
+				-- if item.name == 'compass' then 
+				-- 	if item.count >= 1 then
+				-- 		TriggerEvent("HUD:Client:UsedCompass", true)
+				-- 	else
+				-- 		TriggerEvent("HUD:Client:UsedCompass", false)
+				-- 	end
+				-- end
+
+				if item then
+					actionWeaponToHorse(data, item)
+					swapWeaponHotbar(item, data)
+				end
+			end
+
+			if weaponSlot and currentWeapon then
+				currentWeapon.slot = weaponSlot
+			end
+
+			if response then
+				updateInventory(response.items, response.weight)
+			end
+
+		elseif response then
+
+			if type(response) == 'table' then
+				SendNUIMessage({ action = 'refreshSlots', data = { items = response } })
+			else
+				lib.notify({ type = 'error', description = locale(response) })
+			end
+			
+		end
+
+		cb(success or false)
+	end)
+end)
+
+
+function actionWeaponToHorse(data, item)
+	
+	if IS_RDR3 then
+		local playerPed = PlayerPedId()
+
+		local horseEntity = currentInventory.entity
+
+		local horse = horseEntity or Citizen.InvokeNative(0x4C8B59171957BCF7, playerPed) or GetMount(playerPed)
+
+		-- print('actionWeaponToHorse')
+		-- print(json.encode(data))
+		
+		if string.find(string.lower(item.name), "weapon") then
+			-- print('passei 1')
+			local weaponHash = GetHashKey(item.name)
+
+
+			Wait(100)
+			
+			-- print('horse', horse)
+
+			if data.toType == 'glovebox' then 
+				-- print('passei 2')
+				Citizen.InvokeNative(0xE9BD19F8121ADE3E, playerPed, weaponHash)
+
+				N_0x14ff0c2545527f9b(horse, weaponHash, playerPed)
+
+			elseif data.fromType == 'glovebox' then
+
+				SetCurrentPedWeapon(playerPed, weaponHash, false)
+
+				-- print('passei 3')
+				-- -- RemoveAllPedWeapons(horse, true, true)
+				-- Citizen.InvokeNative(0xE9BD19F8121ADE3E, playerPed, `WEAPON_UNARMED`)
+
+				-- N_0x14ff0c2545527f9b(horse, `WEAPON_UNARMED`, playerPed)
+
+				-- Citizen.InvokeNative(0xFCCC886EDE3C63EC, horse, 2, true)
+			end
+		end
+	end
+end
+
+
+function swapWeaponHotbar(item, data)
+	if string.find(string.lower(item.name), "weapon") then
+		if data.toType == "player" then
+			
+			if data.fromSlot > 0 and data.fromSlot < 6 then
+				local playerPed = PlayerPedId()
+				local weaponHash = GetHashKey(item.name)
+				local ammoHash = GetPedAmmoTypeFromWeapon(playerPed, weaponHash)
+
+				local mountOwnedByPlayer = Citizen.InvokeNative(0xF49F14462F0AE27C, PlayerId()) -- GET_MOUNT_OWNED_BY_PLAYER
+
+				if currentInventory.entity ~= mountOwnedByPlayer or (data.toType == "player" and data.fromType == "player") then
+					Citizen.InvokeNative(0xB6CFEC32E3742779, playerPed, ammoHash, weaponAmmo, GetHashKey('REMOVE_REASON_DROPPED'))  --_REMOVE_AMMO_FROM_PED_BY_TYPE
+					RemoveWeaponFromPed(playerPed, weaponHash)
+				end
+			end
+			
+			--[[
+				useSlot esta dando merda se usar ele por aqui, tem que usar pelo servidor
+			]]
+			
+			-- if data.toSlot > 0 and data.toSlot < 6 then
+			-- 	useSlot(data.toSlot)
+			-- end
+		end
+	end
+end
+
+
+local SADDLEBAG_POINTS =
+{
+    {
+        boneName = 'SPR_L_Saddlebag',
+
+        lootAnimationDict = 'mech_pickup@loot@horse_saddlebags@live@lt'
+    },
+    {
+        boneName = 'SPR_R_Saddlebag',
+        
+        lootAnimationDict = 'mech_pickup@loot@horse_saddlebags@live@rt'
+    }
+}
+
+function StartInventoryAction(actionType, data, cb)
+	if IS_RDR3 and (data.fromType == 'glovebox' or data.toType == 'glovebox') then
+
+		--[[ Só bloquear o inventário caso esteja removendo item do cavalo ]]
+		local lockInventory = (data.fromType == 'glovebox' and data.toType == 'player')
+							-- true
+
+		if lockInventory then
+			gCanPlayerCloseInventory = false
+		else
+			cb()
+		end
+
+		local playerPed = PlayerPedId()
+		local horseEntity = currentInventory.entity
+
+		local closestSaddlebagPoint         = nil
+		local closestSaddlebagPointDistance = nil
+		local closestSaddlebagPointPosition = nil
+
+		local playerPos = GetEntityCoords(playerPed)
+
+		for _, saddlebagPoint in ipairs(SADDLEBAG_POINTS) do
+
+			local boneName in saddlebagPoint
+
+			local boneIndex = GetEntityBoneIndexByName(horseEntity, boneName)
+
+			local bonePos = GetWorldPositionOfEntityBone(horseEntity, boneIndex)
+			-- local bonePos = GetPedBoneCoords(horseEntity, 50064)
+
+			local distanceToPlayer = #(playerPos - bonePos)
+
+			if not closestSaddlebagPoint or distanceToPlayer < closestSaddlebagPointDistance then
+				closestSaddlebagPoint         = saddlebagPoint
+				closestSaddlebagPointDistance = distanceToPlayer
+				closestSaddlebagPointPosition = bonePos
 			end
 		end
 
-        if weaponSlot and currentWeapon then
-            currentWeapon.slot = weaponSlot
+		local DICT = closestSaddlebagPoint.lootAnimationDict
+		local ANIM = 'base'
+
+		RequestAnimDict(DICT)
+
+		while not HasAnimDictLoaded(DICT) do
+			Citizen.Wait(0)
+		end
+
+		ClearPedTasks(playerPed, true, false) --[[ Flags de acordo com script da rockstar ]]
+		ClearPedTasks(horseEntity)
+
+        ClearPedSecondaryTask(playerPed)
+
+		local taskSequenceId = OpenSequenceTask()
+		--[[ 0 ]] TaskFollowNavMeshToCoord(0, closestSaddlebagPointPosition, 1.0, 20000, 0.1, 0, 40000.0)
+        --[[ 1 ]] TaskTurnPedToFaceCoord(0, closestSaddlebagPointPosition, 0)
+        --[[ 2 ]] TaskPlayAnim(0, DICT, ANIM, 4.0, -4.0, -1, 4, 0.0, false, 0, false, 0, false)
+		CloseSequenceTask(taskSequenceId)
+		TaskPerformSequence(playerPed, taskSequenceId)
+		ClearSequenceTask(taskSequenceId)
+
+        CreateThread(function()
+            local sequenceProgress
+
+            local taskedHorse = false
+
+            while sequenceProgress ~= -1 do
+                Wait(0)
+
+                sequenceProgress = GetSequenceProgress(playerPed)
+
+                if sequenceProgress == 2 and not taskedHorse then
+                    TaskPlayAnim(horseEntity, DICT, 'base_horse', 4.0, -4.0, -1, 65552, 0.0, false, 0, false, 0, false)
+
+                    taskedHorse = true
+                end
+            end
+
+			if lockInventory then
+				if taskedHorse then
+					-- Animação acabou e tudo ocorreu como esperado, então a gente executa a ação do inventário
+					cb()
+				end
+
+				gCanPlayerCloseInventory = true
+			end
+
+			RemoveAnimDict(DICT)
+        end)
+
+        --[=[
+        do -- DEBUG
+            CreateThread(function()
+                while true do
+                    Wait(0)
+
+                    for _, saddlebagPoint in ipairs(SADDLEBAG_POINTS) do
+
+                        local boneName in saddlebagPoint
+
+                        local boneIndex = GetEntityBoneIndexByName(horseEntity, boneName)
+
+                        local bonePos = GetWorldPositionOfEntityBone(horseEntity, boneIndex)
+
+                        Citizen.InvokeNative(`DRAW_LINE` & 0xFFFFFFFF, bonePos, bonePos + vec3(0.0, 0.0, 0.5), 255, 0, 0, 255)
+                    end
+                end
+            end)
         end
-
-		if response then
-			updateInventory(response.items, response.weight)
-		end
-	elseif response then
-		if type(response) == 'table' then
-			SendNUIMessage({ action = 'refreshSlots', data = { items = response } })
-		else
-			lib.notify({ type = 'error', description = locale(response) })
-		end
+        --]=]
+		
+		return
 	end
-end)
 
+	cb()
+end
 
 RegisterNUICallback('buyItem', function(data, cb)
 	---@type boolean, false | { [1]: number, [2]: SlotWithItem, [3]: SlotWithItem | false, [4]: number}, NotifyProps
@@ -2232,6 +2464,6 @@ lib.callback.register('ox_inventory:getVehicleData', function(netid)
 	end
 end)
 
-AddEventHandler('gameevent:PlayerTargetEntity', function(interactedEntityId)
+AddEventHandler('playerTargetEntityChanged', function(interactedEntityId)
     currentInteractedEntityId = interactedEntityId
 end)
