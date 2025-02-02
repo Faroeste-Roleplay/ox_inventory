@@ -244,7 +244,6 @@ function Inventory.GetSlotsWithItem(itemName, metadata, strict)
 
 	if not inventory or not item then return end
 
-
 	metadata = assertMetadata(metadata)
 	local response = {}
 	local n = 0
@@ -293,7 +292,6 @@ function Inventory.GetItemCount(itemName, metadata, strict)
 		return item.count
 	end
 
-
 	metadata = assertMetadata(metadata)
 	local count = 0
 	local tablematch = strict and table.matches or table.contains
@@ -317,10 +315,13 @@ end
 ---@param point CPoint
 local function nearbyEvidence(point)
 	---@diagnostic disable-next-line: param-type-mismatch
-	DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 30, 30, 150, 222, false, false, 0, true, false, false, false)
-
-	if point.isClosest and point.currentDistance < 1.2 and IsControlJustReleased(0, 38) then
-		openEvidence()
+	
+	if IS_GTAV then
+		DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 30, 30, 150, 222, false, false, 0, true, false, false, false)
+		
+		if point.isClosest and point.currentDistance < 1.2 and IsControlJustReleased(0, 38) then
+			openEvidence()
+		end
 	end
 end
 
@@ -335,16 +336,15 @@ Inventory.Evidence = setmetatable(lib.load('data.evidence'), {
             end
 
 			if client.hasGroup(shared.police) then
-				if shared.target then
+				if shared.target or IS_RDR3 then
 					if evidence.target then
                         evidence.zoneId = Utils.CreateBoxZone(evidence.target, {
-                            {
-                                icon = evidence.target.icon or 'fas fa-warehouse',
-                                label = locale('open_police_evidence'),
-                                groups = shared.police,
+							{
+								name = 'open_police_evidence',
+								label = locale('open_police_evidence'),
                                 onSelect = openEvidence,
-                                iconColor = evidence.target.iconColor,
-                            }
+								distance = 2,
+							}
                         })
 					end
 				else
