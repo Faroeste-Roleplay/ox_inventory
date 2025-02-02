@@ -22,13 +22,17 @@ return {
 			{name = "sieve", price = 2.35}, 
 			{name = "campfire", price = 0.15}, 
 			{name = "emptybag", price = 0.01},
-			{name = "pigeon", price = 0.25},
-			{name = "scratch_ticket", price = 1.50},
-			{name = "dog_food", price = 1.00},	
+			-- {name = "pigeon", price = 0.25},
+			-- {name = "scratch_ticket", price = 1.50},
+			-- {name = "dog_food", price = 1.00},	
 		}, locations = {
+
 			vec3(2825.75, -1318.34, 46.76), -- Saint Denis
 			vec3( 1328.48, -1292.83, 77.02), -- Rhodes
 			vec3(-322.39, 803.89, 117.69), -- Valentine
+
+			vec3( 3025.47, 561.33, 44.54 )
+
 			-- vec3(-785.20, -1323.84, 43.89), -- BlackWater
 			--vec3(-3685.508, -2623.638, -13.431), -- Armadillo
 			--vec3(-5487.755, -2938.284, -0.388), -- Tumbleweed
@@ -46,8 +50,9 @@ return {
 		}, locations = {
 			vec3(2513.64, -1305.51, 48.77), -- Saint Denis
 			vec3(-279.01, 808.6, 119.19), -- Valentine
-			-- vec3(-768.12, -1266.33, 43.87), -- Blackwater
 			vec3(2906.2, 1308.63, 44.75), -- Annesburg
+
+			-- vec3(-768.12, -1266.33, 43.87), -- Blackwater
 		}
 	},
 
@@ -62,7 +67,7 @@ return {
 			{name = "p_baitCorn01x", price = 0.02},
 			{name = "p_baitCheese01x", price = 0.02},
 			{name = "p_baitWorm01x", price = 0.02},
-			{name = "p_baitCricket01x", price = 0.02},			
+			{name = "p_baitCricket01x", price = 0.02},
 			{name = "p_crawdad01x", price = 0.02},
 			{name = "p_FinisdFishlure01x", price = 0.05},
 			{name = "p_finishdcrawd01x", price = 0.05},
@@ -91,8 +96,8 @@ return {
             {name = "WEAPON_MELEE_KNIFE", price = 2.50},
             {name = "WEAPON_BOW", price = 20},
 
-            {name = "WEAPON_REVOLVER_DOUBLEACTION", price = 1},
-            {name = "WEAPON_REVOLVER_DOUBLEACTION_GAMBLER", price = 15, currency = "gold" },
+            {name = "WEAPON_REVOLVER_DOUBLEACTION", price = 3},
+            {name = "WEAPON_REVOLVER_DOUBLEACTION_GAMBLER", price = 1, currency = "gold" },
 
             {name = "WEAPON_REVOLVER_CATTLEMAN", price = 13},
             {name = "WEAPON_REVOLVER_CATTLEMAN_MEXICAN", price = 1, currency = "gold"},
@@ -158,23 +163,16 @@ return {
 	
 	Farmacia = {
 		name = 'Farmacia',
-		prompt = true,
+		prompt = false,
 		blip = {
 			id = 93, colour = 69, scale = 0.8
 		},
 		inventory = {
-			{name = "tonic_potent_cure", price = 5.0},
-			{name = "reviver", price = 5.00},
-			{name = "reviver_dog", price = 2.00},
-			reviver_dog
-		}, locations = {
-			vec3(2727.88, -1232.04, 50.37),             
-            vec3(1369.522, -1310.382, 77.937),          
-            vec3(-289.544, 807.453, 119.385),
-            vec3(-1806.983, -432.513, 158.831),       
-            vec3(-3646.776, -2601.155, -13.1639),      
-            vec3(2931.193, 1365.98, 45.19),     
-            vec3(472.666, 2267.511, 249.1554), 
+			{name = "tonic_potent_cure", price = 3.0},
+			{name = "tonic_potent_miracle", price = 8.0},
+
+			{name = "reviver", price = 10.0},
+			{name = "medicine", price = 8.0},
 		}
 	},
 
@@ -206,17 +204,17 @@ return {
 			id = 110, colour = 84, scale = 0.8
 		}, 
 		inventory = {
-			{ name = 'badge_officer', price = 0, grade = 0 },
-			{ name = 'badge_texas_ranger', price = 0, grade = 0 },
-			{ name = 'badge_sheriff', price = 0, grade = 0 },
-			{ name = 'badge_deputy', price = 0, grade = 0 },
-			{ name = 'badge_marshal', price = 0, grade = 0 },
+			{ name = 'badge_officer', price = 0, grade = nil },
+			{ name = 'badge_texas_ranger', price = 0, grade = nil },
+			{ name = 'badge_sheriff', price = 0, grade = nil },
+			{ name = 'badge_deputy', price = 0, grade = nil },
+			{ name = 'badge_marshal', price = 0, grade = nil },
 
 			{ name = 'handcuffs', price = 0 },
 			{ name = 'handcuffs_keys', price = 0 },
-			{name = "pigeon", price = 0.15},	
+			-- {name = "pigeon", price = 0.15},	
 
-			{ name = 'weapon_kit_camera', price = 5, grade = 0 },
+			{ name = 'weapon_kit_camera', price = 5, grade = nil },
 			{ name = "weapon_kit_binoculars", price = 0.80},		
 			{ name = 'weapon_melee_knife', price = 0.30 },
 			{ name = 'weapon_lasso', price = 0.20 },
@@ -231,7 +229,7 @@ return {
 			{ name = 'weapon_revolver_navy', price = 3, metadata = { registered = true, serial = 'OFICIAL' } },
 			{ name = 'weapon_revolver_lemat', price = 7, metadata = { registered = true, serial = 'OFICIAL' } },
 
-			{ name = 'weapon_pistol_mauser', price = 7, metadata = { registered = true, serial = 'OFICIAL' } },
+			-- { name = 'weapon_pistol_mauser', price = 7, metadata = { registered = true, serial = 'OFICIAL' } },
 
 			{ name = 'weapon_repeater_carbine', price = 5, metadata = { registered = true, serial = 'OFICIAL' } },
 			{ name = 'weapon_repeater_evans', price = 14, metadata = { registered = true, serial = 'OFICIAL' } },
@@ -252,7 +250,27 @@ return {
 		}
 	},
 
+	LumberShop = {
+		name = 'Lenhador',
+		prompt = false,
+		blip = {
+			id = 403, colour = 69, scale = 0.8
+		}, inventory = {
+			{ name = 'axe',  price = 5 },
+		}
+	},
 	
+	MineShop = {
+		name = 'Minerador',
+		prompt = false,
+		blip = {
+			id = 403, colour = 69, scale = 0.8
+		}, inventory = {
+			{ name = 'pickaxe',  price = 5 },
+			{ name = 'weapon_melee_lantern',  price = 3 },
+		}
+	},
+
 	IllegalShop = {
 		name = 'Vendedor Clandestino',
 		prompt = false,
@@ -261,8 +279,6 @@ return {
 		}, inventory = {
 			{ name = 'distiller',  price = 250, count = 1 },
 			{ name = 'opiumtable', price = 200, count = 1 },
-		}, locations = {
-			vector3(0,0,0)
 		}
 	},
 
