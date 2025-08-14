@@ -1,0 +1,29 @@
+return {
+    [`PICKUP_WEAPON_MELEE_HATCHET`]           = 'weapon_melee_hatchet',
+
+    [`PICKUP_WEAPON_THROWN_THROWING_KNIVES`]  = 'weapon_thrown_throwing_knives',
+
+    [`PICKUP_WEAPON_THROWN_BOLAS`]            = 'weapon_thrown_bolas',
+
+    [`PICKUP_WEAPON_THROWN_TOMAHAWK`]         = 'weapon_thrown_tomahawk',
+    [`PICKUP_WEAPON_THROWN_TOMAHAWK_ANCIENT`] = 'weapon_thrown_tomahawk_ancient',
+
+    [`PICKUP_AMMO_ARROW`]                     = 'ammo_arrow',
+    [`PICKUP_AMMO_ARROW_CONFUSION`]           = 'AMMO_ARROW_CONFUSION',
+    [`PICKUP_AMMO_ARROW_DISORIENT`]           = 'AMMO_ARROW_DISORIENT',
+    [`PICKUP_AMMO_ARROW_DRAIN`]               = 'AMMO_ARROW_DRAIN',
+    [`PICKUP_AMMO_ARROW_WOUND`]               = 'AMMO_ARROW_WOUND',
+
+    [`PICKUP_AMMO_SINGLE_ARROW`]            = 'ammo_arrow',
+    [`PICKUP_AMMO_SINGLE_ARROW_CONFUSION`]  = 'AMMO_ARROW_CONFUSION',
+    [`PICKUP_AMMO_SINGLE_ARROW_DISORIENT`]  = 'AMMO_ARROW_DISORIENT',
+    [`PICKUP_AMMO_SINGLE_ARROW_DRAIN`]      = 'AMMO_ARROW_DRAIN',
+    [`PICKUP_AMMO_SINGLE_ARROW_DYNAMITE`]   = 'AMMO_ARROW_DYNAMITE',
+    [`PICKUP_AMMO_SINGLE_ARROW_FIRE`]       = 'AMMO_ARROW_FIRE',
+    [`PICKUP_AMMO_SINGLE_ARROW_IMPROVED`]   = 'AMMO_ARROW_IMPROVED',
+    [`PICKUP_AMMO_SINGLE_ARROW_POISON`]     = 'AMMO_ARROW_POISON',
+    [`PICKUP_AMMO_SINGLE_ARROW_SMALL_GAME`] = 'AMMO_ARROW_SMALL_GAME',
+    [`PICKUP_AMMO_SINGLE_ARROW_TRAIL`]      = 'AMMO_ARROW_TRAIL',
+    [`PICKUP_AMMO_SINGLE_ARROW_WOUND`]      = 'AMMO_ARROW_WOUND',
+    [`PICKUP_WEAPON_SINGLE_ARROW`]          = 'ammo_arrow',
+}
