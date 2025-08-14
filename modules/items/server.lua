@@ -35,6 +35,8 @@ local function getItem(_, name)
     return ItemList[name]
 end
 
+exports('API_Items', function() return ItemList end)
+
 setmetatable(Items --[[@as table]], {
 	__call = getItem
 })
@@ -77,15 +79,15 @@ CreateThread(function()
 
 				---@todo separate into functions for reusability, properly handle nil values
 				local itemFormat = [[
+					[%q] = {
+						label = %q,
+						weight = %s,
+						stack = %s,
+						close = %s,
+						description = %q
+					},
+				]]
 
-	[%q] = {
-		label = %q,
-		weight = %s,
-		stack = %s,
-		close = %s,
-		description = %q
-	},
-]]
 				local fileSize = #file
 
 				for _, item in pairs(dump) do
@@ -313,8 +315,6 @@ function Items.Metadata(inv, item, metadata, count)
 		if item.hash == `WEAPON_PETROLCAN` or item.hash == `WEAPON_HAZARDCAN` or item.hash == `WEAPON_FERTILIZERCAN` or item.hash == `WEAPON_FIREEXTINGUISHER` then
 			metadata.ammo = metadata.durability
 		end
-
-
 	else
 		local container = Items.containers[item.name]
 
@@ -375,6 +375,7 @@ end
 ---@param ostime number
 ---Validate (and in some cases convert) item metadata when an inventory is being loaded.
 function Items.CheckMetadata(metadata, item, name, ostime)
+
 	if metadata.bag then
 		metadata.container = metadata.bag
 		metadata.size = Items.containers[name]?.size or {5, 1000}
@@ -412,24 +413,27 @@ function Items.CheckMetadata(metadata, item, name, ostime)
 		end
 
 		if metadata.components then
-			if table.type(metadata.components) == 'array' then
-				for i = #metadata.components, 1, -1 do
-					if not ItemList[metadata.components[i]] then
-						table.remove(metadata.components, i)
+			local tableSize = #metadata.components
+			if IS_GTAV then
+				if tableSize >= 1 then
+					for i = tableSize, 1, -1 do
+						if not ItemList[metadata.components[i]] then
+							table.remove(metadata.components, i)
+						end
 					end
-				end
-			else
-				local components = {}
-				local size = 0
+				else
+					local components = {}
+					local size = 0
 
-				for _, component in pairs(metadata.components) do
-					if component and ItemList[component] then
-						size += 1
-						components[size] = component
+					for _, component in pairs(metadata.components) do
+						if component and ItemList[component] then
+							size += 1
+							components[size] = component
+						end
 					end
-				end
 
-				metadata.components = components
+					metadata.components = components
+				end
 			end
 		end
 
@@ -437,9 +441,14 @@ function Items.CheckMetadata(metadata, item, name, ostime)
 			metadata.serial = nil
 		end
 
-		if metadata.specialAmmo and type(metadata.specialAmmo) ~= 'string' then
-			metadata.specialAmmo = nil
+		if not metadata.customAmmo then
+			metadata.customAmmo = {}
 		end
+
+		if item.ammoname and not metadata.customAmmo[item.ammoname:lower()] then
+			metadata.customAmmo[item.ammoname:lower()] = 0
+		end
+
 	end
 
 	return metadata
@@ -492,23 +501,37 @@ end
 -- Serverside item functions
 -----------------------------------------------------------------------------------------------
 
--- Item('testburger', function(event, item, inventory, slot, data)
--- 	if event == 'usingItem' then
--- 		if Inventory.GetItem(inventory, item, inventory.items[slot].metadata, true) > 0 then
--- 			-- if we return false here, we can cancel item use
--- 			return {
--- 				inventory.label, event, 'external item use poggies'
--- 			}
--- 		end
-
--- 	elseif event == 'usedItem' then
--- 		print(('%s just ate a %s from slot %s'):format(inventory.label, item.label, slot))
-
--- 	elseif event == 'buying' then
--- 		print(data.id, data.coords, json.encode(data.items[slot], {indent=true}))
--- 	end
--- end)
-
 -----------------------------------------------------------------------------------------------
+Item('bag_container', function(event, item, inventory, slot, data)
+
+    local playerId = inventory.id
+    local User   = API.GetUserFromSource(playerId)
+	local characterId = User:GetCharacterId()
+
+    if event == 'buying' then
+        return true
+    end
+
+    if event == 'usingItem' then
+		TriggerEvent("ox_inventory:addAdditionalSlots", playerId, characterId)
+	end
+
+	
+    if event == 'usedItem' then
+	end
+
+	return false
+end)
+
+exports('CreateUseableItem', function (itemName, cb)
+	Item(itemName, function(event, item, inventory, slot, data)
+		if event == 'usingItem' then
+			if Inventory.GetItem(inventory, item, inventory.items[slot].metadata, true) > 0 then
+				cb(inventory.id, inventory.items[slot])
+			end
+		end
+	end)
+end)
+
 
 return Items

@@ -18,21 +18,36 @@ shared = {
     playerslots = GetConvarInt('inventory:slots', 50),
     playerweight = GetConvarInt('inventory:weight', 30000),
     target = GetConvarInt('inventory:target', 0) == 1,
-    police = json.decode(GetConvar('inventory:police', '["police", "law", "staff", "sheriff"]')),
-    persistent_items = GetConvarInt('inventory:persistent_items', 0) == 1 -- for REDM only
+    police = json.decode(GetConvar('inventory:police', '["police", "sheriff"]')),
+    persistent_items = GetConvarInt('inventory:persistent_items', 1) == 1 -- for REDM only
 }
 
 shared.prime = {
-    ["user"]        = {     MaxWeight = 25000,  MaxSlots = 20    },
+    { Group = "user",           MaxWeight = 25000, MaxSlots = 25 },
 
-    ["bronze"]      = {     MaxWeight = 30000,  MaxSlots = 25    },
-    ["silver"]       = {     MaxWeight = 40000,  MaxSlots = 30    },
-    ["gold"]        = {     MaxWeight = 50000,  MaxSlots = 40    },
-    ["platinum"]     = {     MaxWeight = 55000,  MaxSlots = 45    },
-    ["diamond"]    = {     MaxWeight = 60000,  MaxSlots = 50    },
+    { Group = "relaunch",       MaxWeight = 40000, MaxSlots = 30 },
 
-    ["admin"]       = {     MaxWeight = 60000,  MaxSlots = 50    },
-    ["moderator"]   = {     MaxWeight = 60000,  MaxSlots = 50    },
+    { Group = "bronze",         MaxWeight = 40000, MaxSlots = 30 },
+    { Group = "renewbronze",   MaxWeight = 40000, MaxSlots = 30 },
+
+    { Group = "silver",         MaxWeight = 50000, MaxSlots = 40 },
+    { Group = "renewsilver",   MaxWeight = 50000, MaxSlots = 40 },
+
+    { Group = "gold",           MaxWeight = 60000, MaxSlots = 40 },
+    { Group = "renewgold",     MaxWeight = 60000, MaxSlots = 40 },
+
+    { Group = "platinum",       MaxWeight = 60000, MaxSlots = 45 },
+    { Group = "renewplatinum", MaxWeight = 60000, MaxSlots = 45 },
+
+    { Group = "diamond",        MaxWeight = 70000, MaxSlots = 50 },
+    { Group = "renewdiamond",  MaxWeight = 70000, MaxSlots = 50 },
+
+    { Group = "royalty",        MaxWeight = 70000, MaxSlots = 50 },
+    { Group = "renewroyalty",  MaxWeight = 70000, MaxSlots = 50 },
+
+    { Group = "staff",          MaxWeight = 70000, MaxSlots = 50 },
+    { Group = "admin",          MaxWeight = 70000, MaxSlots = 50 },
+    { Group = "moderator",      MaxWeight = 70000, MaxSlots = 50 },
 }
 
 do
@@ -43,7 +58,7 @@ do
     local police = table.create(0, shared.police and #shared.police or 0)
 
     for i = 1, #shared.police do
-        police[shared.police[i]] = 0
+        table.insert(police, shared.police[i])
     end
 
     shared.police = police
@@ -51,7 +66,7 @@ end
 
 if IsDuplicityVersion() then
     IS_RDR3 = GetConvar('gamename') == 'rdr3'
-	IS_GTAV = not IS_RDR3
+    IS_GTAV = not IS_RDR3
 
     server = {
         bulkstashsave = GetConvarInt('inventory:bulkstashsave', 1) == 1,
@@ -89,7 +104,7 @@ if IsDuplicityVersion() then
     end
 else
     IS_RDR3 = GetGameName() == 'redm'
-	IS_GTAV = not IS_RDR3
+    IS_GTAV = not IS_RDR3
 
     PlayerData = {}
     client = {
@@ -98,7 +113,7 @@ else
         keys = json.decode(GetConvar('inventory:keys', '')) or { 'F2', 'K', 'TAB' },
         enablekeys = json.decode(GetConvar('inventory:enablekeys', '[249]')),
         aimedfiring = GetConvarInt('inventory:aimedfiring', 0) == 1,
-        giveplayerlist = GetConvarInt('inventory:giveplayerlist', 0) == 1,
+        giveplayerlist = GetConvarInt('inventory:giveplayerlist', 1) == 1,
         weaponanims = GetConvarInt('inventory:weaponanims', 1) == 1,
         itemnotify = GetConvarInt('inventory:itemnotify', 1) == 1,
         weaponnotify = GetConvarInt('inventory:weaponnotify', 0) == 1,

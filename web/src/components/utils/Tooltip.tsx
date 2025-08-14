@@ -7,13 +7,13 @@ const Tooltip: React.FC = () => {
   const hoverData = useAppSelector((state) => state.tooltip);
 
   const { refs, context, floatingStyles } = useFloating({
-    middleware: [flip(), shift(), offset({ mainAxis: 10, crossAxis: 10 })],
+    middleware: [flip(), shift(), offset({ mainAxis: -100, crossAxis: 20 })],
     open: hoverData.open,
     placement: 'right-start',
   });
 
   const { isMounted, styles } = useTransitionStyles(context, {
-    duration: 200,
+    duration: 100,
   });
 
   const handleMouseMove = ({ clientX, clientY }: MouseEvent | React.MouseEvent<unknown, MouseEvent>) => {

@@ -65,8 +65,13 @@ const InventoryGrid: React.FC<{ inventory: Inventory, isRight?: boolean }> = ({ 
           
         }}ref={containerRef}>
           <>
-            {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (
-              <InventorySlot
+            {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => {
+
+              if (inventory.type == "otherplayer" && item.metadata?.hidden ) {
+                return
+              }
+
+              return  <InventorySlot
                 key={`${inventory.type}-${inventory.id}-${item.slot}`}
                 item={item}
                 ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
@@ -74,7 +79,8 @@ const InventoryGrid: React.FC<{ inventory: Inventory, isRight?: boolean }> = ({ 
                 inventoryGroups={inventory.groups}
                 inventoryId={inventory.id}
               />
-            ))}
+            }
+            )}
           </>
         </div>
 

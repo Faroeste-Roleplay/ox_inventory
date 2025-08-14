@@ -77,7 +77,7 @@ function Utils.Notify(data)
 end
 
 function lib.notify(data)
-	cAPI.Notify(data.type, data.description)
+	cAPI.NotifySimple(data.description)
 end
 
 RegisterNetEvent('ox_inventory:notify', Utils.Notify)
@@ -98,53 +98,19 @@ function Utils.ItemNotify(data)
 	end
 
 	if item.name == "money" then
-		Utils.CashNotify(itemCount, 2000, positive)
+		Utils.CashNotify(item.name, itemCount, 2000, positive)
 		return
 	end
 
-	local soundSetStr = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", "Transaction_Feed_Sounds",
-		Citizen.ResultAsLong())
-	local soundNameStr = 0
-
-	if not positive then
-		soundNameStr = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", "Transaction_Negative",
-			Citizen.ResultAsLong())
-	else
-		soundNameStr = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", "Transaction_Positive",
-			Citizen.ResultAsLong())
+	if item.name == "gold" then
+		Utils.CashNotify(item.name, itemCount, 2000, positive)
+		return
 	end
-
-	Utils.PlaySoundSet(soundSetStr, soundNameStr)
 
 	SendNUIMessage({ action = 'itemNotify', data = data })
 end
 
-local is_soundset_playing = false
 
-function Utils.PlaySoundSet(soundset_ref, soundset_name)
-	if not is_soundset_playing then
-		local counter_i = 1
-		while soundset_ref ~= 0 and not Citizen.InvokeNative(0xD9130842D7226045, soundset_ref, 0) and counter_i <= 300 do -- load soundset
-			counter_i = counter_i + 1
-			Citizen.Wait(0)
-		end
-
-		if soundset_ref == 0 or Citizen.InvokeNative(0xD9130842D7226045, soundset_ref, 0) then
-			-- PLAY SOUND FROM POSITION:
-			local ped = PlayerPedId()
-			local ped_coords = GetEntityCoords(ped)
-			local x, y, z = table.unpack(ped_coords + GetEntityForwardVector(ped) * 15.0)
-			-- Citizen.InvokeNative(0xCCE219C922737BFA, soundset_name, x, y, z - 1.0, soundset_ref, true, 0, true, 0) -- PLAY_SOUND_FROM_POSITION
-			is_soundset_playing = true
-
-			-- OR PLAY SOUND FROM ENTITY:
-			Citizen.InvokeNative(0x6FB1DA3CA9DA7D90,soundset_name,PlayerPedId(),soundset_ref,false,0,0)  -- PLAY_SOUND_FROM_ENTITY
-		end
-	else
-		Citizen.InvokeNative(0x531A78D6BF27014B, soundset_ref)  -- stop soundset (required, otherwise new soundsets can fail to load)
-		is_soundset_playing = false
-	end
-end
 
 RegisterNetEvent('ox_inventory:itemNotify', Utils.ItemNotify)
 
@@ -250,10 +216,16 @@ function Utils.CreateBoxZone(data, options)
 	return exports.ox_target:addBoxZone(data)
 end
 
-function Utils.CashNotify(fAmount, durationMs, positive)
+function Utils.CashNotify(item, fAmount, durationMs, positive)
 	--Transaction_Feed_Sounds", "Transaction_Positive
-	local moneyAmount = (fAmount / 100)
-	local strAmount = ("$%s"):format(moneyAmount)
+
+	local isCents =  fAmount < 100
+
+	local moneyAmount = isCents and '¢' or ("%.2f"):format(fAmount / 100)
+	local moneySymble = isCents and fAmount or '$'
+
+	local strAmount = item == 'gold' and fAmount or ("%s%s"):format(moneySymble, moneyAmount)
+	local itemType = item == 'gold' and `ITEMTYPE_GOLD` or `ITEMTYPE_CASH`
 
 	local str1 = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", strAmount, Citizen.ResultAsLong())
 	local str2 = Citizen.InvokeNative(0xFA925AC00EB830B9, 10, "LITERAL_STRING", "ITEMTYPE_TEXTURES",
@@ -294,7 +266,7 @@ function Utils.CashNotify(fAmount, durationMs, positive)
 	struct2:SetInt32(8 * 0, 0)                                          --unk0
 	struct2:SetInt64(8 * 1, pStr1:GetInt64(0))                          -- title
 	struct2:SetInt64(8 * 2, pStr2:GetInt64(0))                          -- subtitle
-	struct2:SetInt32(8 * 3, `ITEMTYPE_CASH`)                            -- TRANSACTION_HONOR_BAD
+	struct2:SetInt32(8 * 3, itemType)                            -- TRANSACTION_HONOR_BAD
 	struct2:SetInt32(8 * 4, 0)
 	struct2:SetInt32(8 * 5, positive and `COLOR_PURE_WHITE` or `COLOR_RED`) --COLOR_GOLD
 	struct2:SetInt32(8 * 6, 0)

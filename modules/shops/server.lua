@@ -160,14 +160,23 @@ end)
 
 local function canAffordItem(inv, currency, price)
 	if currency == 'gold' then
-		local golds = exports.prime_api:getUserCash( inv.id, source )
-		if not golds or golds <= 0 then
+
+		local goldStatus, goldAmount = pcall(function()
+			return exports.prime_api:getUserCash( source )	
+		end)
+
+		if not goldStatus then
+			cAPI.NotifySimple(source, ("Ocorreu um problema %s"):format(goldAmount), 5000)
+			return false 
+		end
+
+		if not goldStatus or not goldAmount then
 			return {
 				type = 'error',
 				description = locale('cannot_afford', ('%s%s'):format((currency == 'money' and locale('$') or comma_value(price)), (currency == 'money' and comma_value(price) or ' '..Items(currency).label)))
 			}
 		end
-		return golds >= price
+		return goldAmount >= price
 	end
 
 	local canAfford = price >= 0 and Inventory.GetItem(inv, currency, false, true) >= price
@@ -178,11 +187,19 @@ local function canAffordItem(inv, currency, price)
 	}
 end
 
-local function removeCurrency(inv, currency, price)
+local function removeCurrency(inv, currency, price, reason)
 	if currency == "gold" then
-		exports.prime_api:removeUserCash( nil, { inv.id, price })
+		local status, err = pcall(function()
+			return exports.prime_api:removeUserCash( { inv.id, price, reason })
+		end)
+
+		if not status then
+			cAPI.NotifySimple(tonumber(inv.id), "Ocorreu um problema", 5000)
+		end
+
+		return status
 	end
-	Inventory.RemoveItem(inv, currency, price)
+	return Inventory.RemoveItem(inv, currency, price)
 end
 
 local TriggerEventHooks = require 'modules.hooks.server'
@@ -232,10 +249,18 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 			end
 
 			if fromData.grade then
-				local _, rank = server.hasGroup(playerInv, shop.groups)
-				if not isRequiredGrade(fromData.grade, rank) then
+
+				-- local hasPermission = Business.personaHasPermissionGrade( playerInv.citizenId, businessId, {"edit_permission", "full_permission"})
+
+				local group, rank = server.hasGroup(playerInv, shop.groups)
+
+				if not Business.hasClassePermission(playerInv.playerData.citizenId, group, rank) then
 					return false, false, { type = 'error', description = locale('stash_lowgrade') }
 				end
+
+				-- if not isRequiredGrade(fromData.grade, rank) then
+				-- 	return false, false, { type = 'error', description = locale('stash_lowgrade') }
+				-- end
 			end
 
 			local currency = fromData.currency or 'money'
@@ -262,6 +287,12 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 					return false, false, canAfford
 				end
 
+				local itemLabel = currency == 'money' and comma_value(price) or ' '..(currency == "gold" and "Gold" or Items(currency).label)
+				local message = locale('purchased_for', count, metadata?.label or fromItem.label, (currency == 'money' and locale('$') or comma_value(price)), (itemLabel))
+
+				local res = removeCurrency(playerInv, currency, tonumber( ('%0.2f'):format(price) ), message)
+				assert(res, "Ocorreu um problema na hora da compra")
+
 				if not TriggerEventHooks('buyItem', {
 					source = source,
 					shopType = shopType,
@@ -278,7 +309,6 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 
 				Inventory.SetSlot(playerInv, fromItem, count, metadata, data.toSlot)
 				playerInv.weight = newWeight
-				removeCurrency(playerInv, currency, tonumber( ('%0.2f'):format(price) ))
 
 				Business.TaxRepositoryCreate(source, price)
 				
@@ -288,15 +318,7 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 
 				if server.syncInventory then server.syncInventory(playerInv) end
 
-				local itemLabel = currency == 'money' and comma_value(price) or ' '..(currency == "gold" and "Gold" or Items(currency).label)
-
-				local message = locale('purchased_for', count, metadata?.label or fromItem.label, (currency == 'money' and locale('$') or comma_value(price)), (itemLabel))
-
-				if server.loglevel > 0 then
-					if server.loglevel > 1 or fromData.price >= 500 then
-						lib.logger(playerInv.owner, 'buyItem', ('"%s" %s'):format(playerInv.label, message:lower()), ('shop:%s'):format(shop.label))
-					end
-				end
+				lib.logger(playerInv.source, 'buyItem', ('"%s" %s'):format(playerInv.label, message:lower()), ('shop:%s'):format(shop.label))
 
 				return true, {data.toSlot, playerInv.items[data.toSlot], shop.items[data.fromSlot].count and shop.items[data.fromSlot], playerInv.weight}, { type = 'success', description = message }
 			end

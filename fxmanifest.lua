@@ -31,6 +31,7 @@ server_scripts {
 }
 
 client_script 'init.lua'
+client_script '@frp_weapon/client/customization.lua'
 
 ui_page 'web/build/index.html'
 
@@ -44,6 +45,7 @@ files {
     'web/build/assets/*.png',
     'web/build/assets/*.ttf',
     'web/images/*.png',
+    'web/images/**/*.png',
     'modules/**/shared.lua',
     'modules/**/client.lua',
     'modules/bridge/**/client.lua',

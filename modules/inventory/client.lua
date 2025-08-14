@@ -57,7 +57,7 @@ function Inventory.CanAccessTrunk(entity)
     end
 end
 
-function Inventory.OpenTrunk(entity)
+function Inventory.OpenTrunk(entity, ignoreOwner)
     ---@type number | number[] | nil
     local door
 
@@ -78,15 +78,29 @@ function Inventory.OpenTrunk(entity)
 		invId = string.format('trunk%s', plate)
 	end
 
+	local vehicleHash = GetEntityModel(vehicle)
+
 	if IS_RDR3 then
-		local vehicleUUID
-		if Entity(entity).state.wagonId then 
-			vehicleUUID = Entity(entity).state.wagonId
-		else
-			vehicleUUID = "trunktemp" .. netId
+		checkVehicle = Vehicles.trunk.models[vehicleHash]
+		local state = Entity(entity).state
+		local horseUUID = state['transport:id']
+		local ownerServerId = state["transport:ownerPlayerServerId"]
+
+		if not horseUUID then
+			--[[ O cavalo não faz parte do nosso sistema. ]]
+			return
 		end
 
-		invId = vehicleUUID
+		if not ignoreOwner then
+			local playerServerId = GetPlayerServerId( PlayerId() )
+
+			if tonumber(playerServerId) ~= tonumber(ownerServerId) then
+				cAPI.NotifyToast("warning", "Não consigo olhar essa carroça")
+				return 
+			end
+		end
+
+		invId = ('trunk%d' --[[ é junto assim mesmo... não tá errado ]]):format(horseUUID)
 	end
 
     local coords = GetEntityCoords(entity)
@@ -361,9 +375,36 @@ Inventory.Evidence = setmetatable(lib.load('data.evidence'), {
 	end
 })
 
+
+local prompt__OpenStash 
+
 local function nearbyStash(self)
 	---@diagnostic disable-next-line: param-type-mismatch
 	DrawMarker(2, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 30, 30, 150, 222, false, false, 0, true, false, false, false)
+
+	if IS_RDR3 and self.prompt then
+		if promptHelper:hasPromptHoldModeCompleted(prompt__OpenStash) then
+			exports.ox_inventory:openInventory( 'stash', self.invId )
+		end
+	end
+end
+
+local function onEnterStash(point)
+	if point.prompt then
+		prompt__OpenStash = PromptBuilder:new()
+			:setControl(`INPUT_QUICK_USE_ITEM`)
+			:setText(('Abrir %s'):format(point.label))
+			:setMode('Hold', 500)
+			:setPoint(vector3(point.coords.x, point.coords.y, point.coords.z))
+			:setRadius(2.0)
+			:build()
+	end
+end
+
+local function onExitStash()
+	if prompt__OpenStash then
+		prompt__OpenStash = PromptDelete(prompt__Open)
+	end
 end
 
 Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
@@ -399,8 +440,12 @@ Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
 						coords = stash.coords,
 						distance = 16,
 						inv = 'stash',
+						prompt = stash.prompt,
+						label = stash.label,
 						invId = stash.name,
-						nearby = nearbyStash
+						nearby = nearbyStash,
+						onEnter = onEnterStash,
+						onExit = onExitStash
 					})
 				end
 			end

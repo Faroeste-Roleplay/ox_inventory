@@ -88,107 +88,54 @@ local ox_inventory = exports[shared.resource]
 -- Clientside item use functions
 -----------------------------------------------------------------------------------------------
 
-Item('bandage', function(data, slot)
-	local maxHealth = GetEntityMaxHealth(cache.ped)
-	local health = GetEntityHealth(cache.ped)
-	ox_inventory:useItem(data, function(data)
-		if data then
-			SetEntityHealth(cache.ped, math.min(maxHealth, math.floor(health + maxHealth / 16)))
-			lib.notify({ description = 'You feel better already' })
-		end
-	end)
-end)
+-- Item('clothing', function(data, slot)
+-- 	local metadata = slot.metadata
 
-Item('armour', function(data, slot)
-	if GetPedArmour(cache.ped) < 100 then
-		ox_inventory:useItem(data, function(data)
-			if data then
-				SetPlayerMaxArmour(PlayerData.id, 100)
-				SetPedArmour(cache.ped, 100)
-			end
-		end)
-	end
-end)
+-- 	if not metadata.drawable then return print('Clothing is missing drawable in metadata') end
+-- 	if not metadata.texture then return print('Clothing is missing texture in metadata') end
 
-client.parachute = false
-Item('parachute', function(data, slot)
-	if not client.parachute then
-		ox_inventory:useItem(data, function(data)
-			if data then
-				local chute = `GADGET_PARACHUTE`
-				SetPlayerParachuteTintIndex(PlayerData.id, -1)
-				GiveWeaponToPed(cache.ped, chute, 0, true, false)
-				SetPedGadget(cache.ped, chute, true)
-				lib.requestModel(1269906701)
-				client.parachute = CreateParachuteBagObject(cache.ped, true, true)
-				if slot.metadata.type then
-					SetPlayerParachuteTintIndex(PlayerData.id, slot.metadata.type)
-				end
-			end
-		end)
-	end
-end)
+-- 	if metadata.prop then
+-- 		if not SetPedPreloadPropData(cache.ped, metadata.prop, metadata.drawable, metadata.texture) then
+-- 			return print('Clothing has invalid prop for this ped')
+-- 		end
+-- 	elseif metadata.component then
+-- 		if not IsPedComponentVariationValid(cache.ped, metadata.component, metadata.drawable, metadata.texture) then
+-- 			return print('Clothing has invalid component for this ped')
+-- 		end
+-- 	else
+-- 		return print('Clothing is missing prop/component id in metadata')
+-- 	end
 
-Item('phone', function(data, slot)
-	local success, result = pcall(function()
-		return exports.npwd:isPhoneVisible()
-	end)
+-- 	ox_inventory:useItem(data, function(data)
+-- 		if data then
+-- 			metadata = data.metadata
 
-	if success then
-		exports.npwd:setPhoneVisible(not result)
-	end
-end)
+-- 			if metadata.prop then
+-- 				local prop = GetPedPropIndex(cache.ped, metadata.prop)
+-- 				local texture = GetPedPropTextureIndex(cache.ped, metadata.prop)
 
-Item('clothing', function(data, slot)
-	local metadata = slot.metadata
+-- 				if metadata.drawable == prop and metadata.texture == texture then
+-- 					return ClearPedProp(cache.ped, metadata.prop)
+-- 				end
 
-	if not metadata.drawable then return print('Clothing is missing drawable in metadata') end
-	if not metadata.texture then return print('Clothing is missing texture in metadata') end
+-- 				-- { prop = 0, drawable = 2, texture = 1 } = grey beanie
+-- 				SetPedPropIndex(cache.ped, metadata.prop, metadata.drawable, metadata.texture, false);
+-- 			elseif metadata.component then
+-- 				local drawable = GetPedDrawableVariation(cache.ped, metadata.component)
+-- 				local texture = GetPedTextureVariation(cache.ped, metadata.component)
 
-	if metadata.prop then
-		if not SetPedPreloadPropData(cache.ped, metadata.prop, metadata.drawable, metadata.texture) then
-			return print('Clothing has invalid prop for this ped')
-		end
-	elseif metadata.component then
-		if not IsPedComponentVariationValid(cache.ped, metadata.component, metadata.drawable, metadata.texture) then
-			return print('Clothing has invalid component for this ped')
-		end
-	else
-		return print('Clothing is missing prop/component id in metadata')
-	end
+-- 				if metadata.drawable == drawable and metadata.texture == texture then
+-- 					return -- item matches (setup defaults so we can strip?)
+-- 				end
 
-	ox_inventory:useItem(data, function(data)
-		if data then
-			metadata = data.metadata
-
-			if metadata.prop then
-				local prop = GetPedPropIndex(cache.ped, metadata.prop)
-				local texture = GetPedPropTextureIndex(cache.ped, metadata.prop)
-
-				if metadata.drawable == prop and metadata.texture == texture then
-					return ClearPedProp(cache.ped, metadata.prop)
-				end
-
-				-- { prop = 0, drawable = 2, texture = 1 } = grey beanie
-				SetPedPropIndex(cache.ped, metadata.prop, metadata.drawable, metadata.texture, false);
-			elseif metadata.component then
-				local drawable = GetPedDrawableVariation(cache.ped, metadata.component)
-				local texture = GetPedTextureVariation(cache.ped, metadata.component)
-
-				if metadata.drawable == drawable and metadata.texture == texture then
-					return -- item matches (setup defaults so we can strip?)
-				end
-
-				-- { component = 4, drawable = 4, texture = 1 } = jeans w/ belt
-				SetPedComponentVariation(cache.ped, metadata.component, metadata.drawable, metadata.texture, 0);
-			end
-		end
-	end)
-end)
+-- 				-- { component = 4, drawable = 4, texture = 1 } = jeans w/ belt
+-- 				SetPedComponentVariation(cache.ped, metadata.component, metadata.drawable, metadata.texture, 0);
+-- 			end
+-- 		end
+-- 	end)
+-- end)
 
 -----------------------------------------------------------------------------------------------
-
-
 
 -- Item('bandage', function(data, slot)
 -- 	local maxHealth = GetEntityMaxHealth(cache.ped)
@@ -200,6 +147,10 @@ end)
 -- 		end
 -- 	end)
 -- end)
+
+Item('shovel', function(data, slot)
+    TriggerEvent("grave:useShovelViolate")
+end)
 
 
 local badges = {
@@ -257,17 +208,28 @@ Citizen.CreateThread(function()
 end)
 
 local seeds = {
-	{ name = 'potato_seed', value1 = 'CRP_POTATO_AA_sim', value2 = 'CRP_POTATO_AA_sim', value3 = 'CRP_POTATO_AA_sim' },
-	{ name = 'goldencurrant_seed', value1 = 'goldencurrant_p', value2 = 'goldencurrant_p', value3 = 'goldencurrant_p' },
-	{ name = 'tobacco_seed', value1 = 'CRP_TOBACCOPLANT_AA_SIM', value2 = 'CRP_TOBACCOPLANT_AB_SIM', value3 = 'CRP_TOBACCOPLANT_AC_SIM' },
-	{ name = 'sugar_seed', value1 = 'CRP_SUGARCANE_AA_sim', value2 = 'CRP_SUGARCANE_AB_sim', value3 = 'CRP_SUGARCANE_AC_sim' },
-	{ name = 'tomato_seed', value1 = 'CRP_TOMATOES_AA_SIM', value2 = 'CRP_TOMATOES_AA_SIM', value3 = 'CRP_TOMATOES_AA_SIM' },
-	{ name = 'corn_seed', value1 = 'CRP_CORNSTALKS_CB_sim', value2 = 'CRP_CORNSTALKS_CA_sim', value3 = 'CRP_CORNSTALKS_AB_sim' },
-	{ name = 'carrot_seed', value1 = 'crp_carrots_Aa_sim', value2 = 'crp_carrots_Aa_sim', value3 = 'crp_carrots_Aa_sim' },
-	{ name = 'cotton_seed', value1 = 'CRP_cotton_Bc_sim', value2 = 'CRP_cotton_Bb_sim', value3 = 'CRP_cotton_Ba_sim' },
-	{ name = 'wheat_seed', value1 = 'CRP_WHEAT_SAP_LONG_AB_SIM', value2 = 'CRP_WHEAT_SAP_LONG_AB_SIM', value3 = 'CRP_WHEAT_SAP_LONG_AB_SIM' },
-	{ name = 'weed_seed', value1 = 'prop_weed_02', value2 = 'prop_weed_02', value3 = 'prop_weed_01' },
-	{ name = 'orleander_seed', value1 = 'orleander_p', value2 = 'orleander_p', value3 = 'orleander_p' },
+	{ name = 'potato_seed' },
+	{ name = 'goldencurrant_seed' },
+	{ name = 'tobacco_seed' },
+	{ name = 'sugar_seed' },
+	{ name = 'tomato_seed' },
+	{ name = 'corn_seed' },
+	{ name = 'carrot_seed' },
+	{ name = 'cotton_seed' },
+	{ name = 'wheat_seed' },
+	{ name = 'weed_seed' },
+	{ name = 'prariepoppy_seed' },
+	{ name = 'herb_guarana_seed' },
+	{ name = 'seed_blackberry' },
+	{ name = 'seed_strawberry' },
+	{ name = 'seed_orange' },
+	{ name = 'herb_coffee_seed' },
+
+	{ name = 'herb_milkweed_seed' },
+	{ name = 'herb_oregano_seed' },
+	{ name = 'herb_wild_carrot_seed' },
+	{ name = 'herb_alaskan_ginseng_seed' },
+	{ name = 'herb_wild_mint_seed' },
 }
 	
 Citizen.CreateThread(function()
@@ -278,7 +240,7 @@ Citizen.CreateThread(function()
 		Item(seed.name, function(data, slot)
 			exports.ox_inventory:useItem(data, function(data)
 				if data then
-					TriggerEvent('planting:planto1', seed.name, seed.value1, seed.value2, seed.value3)
+					TriggerEvent('plantation:client:requestPlant', seed.name)
 				end
 			end)
 		end)
@@ -308,15 +270,16 @@ Citizen.CreateThread(function()
     end
 end)
 
-
 local consumables = {
 	"water",
-    "glueglue",
+	"consumable_chocolate_bar",
+	"consumable_chocolate",
+	"consumable_candycanes",
+	"consumable_candy_bag",
 	"apple",
 	"canned_meat",
 	"canned_corn",	
 	"canned_stew",
-	"canteen_full",
 	"bottle_milk",
 	"blackberry_cake", -- Sem utilidade
 	"bread",
@@ -352,7 +315,7 @@ local consumables = {
 	'apple_juice',
 	'corn_cake',
 	'colacola',
-	'canteen_full',
+	-- 'canteen_full',
 	'vitamin',
 	'bottle_milk',
 	'beer',
@@ -364,6 +327,7 @@ local consumables = {
 	'cigarette',
 	'cigar',
 	'pipe',
+	'pipe_native',
 	'rape',
 	'stringy_meat_roasted',
 	'flaky_meat_roasted',
@@ -393,6 +357,9 @@ local consumables = {
 	'tender_meat_cooked',
 	'exotic_meat_cooked',
 	'big_meat_cooked',
+	"drink_generic",
+	"food_generic",
+	'tobacco_gum',
 }
 
 Citizen.CreateThread(function()
@@ -403,7 +370,7 @@ Citizen.CreateThread(function()
 		Item(consumable, function(data, slot)
 			exports.ox_inventory:useItem(data, function(data)
 				if data then				
-					TriggerServerEvent("HUD:Consumable:Item", consumable)
+					TriggerServerEvent("HUD:Consumable:Item", consumable, slot.metadata)
 				end
 			end)
 		end)
@@ -411,27 +378,62 @@ Citizen.CreateThread(function()
 end)
 
 Item('sieve', function(data, slot)
-	TriggerEvent('goldpanner:StartPaning')
+	exports.ox_inventory:useItem(data, function(data)
+		TriggerEvent('goldpanner:StartPaning')
+	end)
 end)
 
 Item('aljava', function(data, slot)
 	TriggerEvent('Indian:Client:Aljava')
 end)
 
+Item('poison_mana', function(data, slot)
+	exports.ox_inventory:useItem(data, function(data)
+		if data then
+			TriggerEvent("usableItems:UseTonicPoison", 45)
+			-- TriggerServerEvent('inventory:server:RemoveDurability', slot, 28)
+		end
+	end)
+end)
+
+Item('hunt_eye_poison', function(data, slot)
+	exports.ox_inventory:useItem(data, function(data)
+		exports.player_interactions.eyePoison( data, slot )
+	end)
+end)
+
+Item('tonic_potent_cure_native', function(data, slot)
+	exports.ox_inventory:useItem(data, function(data)
+		if data then
+			TriggerEvent("usableItems:UseTonic", 0.25)
+			-- TriggerServerEvent('inventory:server:RemoveDurability', slot, 28)
+		end
+	end)
+end)
 
 Item('tonic_potent_cure', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
-			TriggerEvent("usableItems:UseTonic", 0.16)
-			TriggerServerEvent('inventory:server:RemoveDurability', slot, 34)
+			TriggerEvent("usableItems:UseTonic", 0.20)
+			-- TriggerServerEvent('inventory:server:RemoveDurability', slot, 34)
 		end
 	end)
 end)
+
 Item('tonic_potent_miracle', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
-			TriggerEvent("usableItems:UseTonic", 0.33)
-			TriggerServerEvent('inventory:server:RemoveDurability', slot, 34)
+			TriggerEvent("usableItems:UseTonic", 0.40)
+			-- TriggerServerEvent('inventory:server:RemoveDurability', slot, 34)
+		end
+	end)
+end)
+
+Item('cigarette_box', function(data, slot)
+	exports.ox_inventory:useItem(data, function(data)
+		if data then
+			TriggerServerEvent("consumable:cigarette_box:getOne")
+			-- TriggerServerEvent('inventory:server:RemoveDurability', slot, 10)
 		end
 	end)
 end)
@@ -444,21 +446,21 @@ Item('roupaspreso', function(data, slot)
 	end)
 end)
 
-Item('handcuffs', function(data, slot)
-	exports.ox_inventory:useItem(data, function(data)
-		if data then
-			TriggerEvent("police:client:CuffPlayerSoft")
-		end
-	end)
-end)
+-- Item('handcuffs', function(data, slot)
+-- 	exports.ox_inventory:useItem(data, function(data)
+-- 		if data then
+-- 			TriggerEvent("interact:player:tryCuff")
+-- 		end
+-- 	end)
+-- end)
 
-Item('handcuffs_keys', function(data, slot)
-	exports.ox_inventory:useItem(data, function(data)
-		if data then
-			TriggerEvent("police:client:CuffPlayerForceRemove")
-		end
-	end)
-end)
+-- Item('handcuffs_keys', function(data, slot)
+-- 	exports.ox_inventory:useItem(data, function(data)
+-- 		if data then
+-- 			TriggerEvent("interact:player:tryUnCuffWithKey")
+-- 		end
+-- 	end)
+-- end)
 
 Item('dog_whistle', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
@@ -470,10 +472,6 @@ end)
 
 Item('brush', function(data, slot)
 	TriggerEvent("HORSES:startbrush")
-end)
-
-Item('bucket', function(data, slot)
-	TriggerEvent("lto_headbucket:Verification")
 end)
 
 Item('distiller', function(data, slot)
@@ -490,32 +488,43 @@ Item('lockpick', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
 			TriggerEvent('tryLockpickingDoor', 50)
+			TriggerEvent('tryLockpicking', 50)
 		end
 	end)
 end)
-Item('lockpickr', function(data, slot)
+Item('lockpick_advanced', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
 			TriggerEvent('tryLockpickingDoor', 100)
+			TriggerEvent('tryLockpicking', 100)
 		end
 	end)
 end)
 
 Item('id_card', function(data, slot)
-    TriggerServerEvent("idcard:show",slot.metadata)
+    TriggerEvent("document:display", slot.metadata)
 end)
 
 Item('campfire', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
-			TriggerEvent('CAMPFIRE:Client:SpawnCampfire', "p_campfire01x")
+			TriggerEvent('CAMPFIRE:Client:SpawnCampfire', "p_campfire05x")
 		end
 	end)
 end)
-Item('campfiresmall', function(data, slot)
+
+Item('campfire_smoke', function(data, slot)
 	exports.ox_inventory:useItem(data, function(data)
 		if data then
-			TriggerEvent('CAMPFIRE:Client:SpawnCampfire', "p_campfire03x")
+			TriggerEvent('CAMPFIRE:Client:SpawnCampfire', "p_campfire_coloursmoke01x")
+		end
+	end)
+end)
+
+Item('campfire_medium', function(data, slot)
+	exports.ox_inventory:useItem(data, function(data)
+		if data then
+			TriggerEvent('CAMPFIRE:Client:SpawnCampfire', "p_campfire04x")
 		end
 	end)
 end)
@@ -528,9 +537,9 @@ Item('scratch_ticket', function(data, slot)
 	end)
 end)
 
-Item('newspaper', function(data, slot)
-	TriggerEvent("newspaper:openNewspaper")
-end)
+-- Item('newspaper', function(data, slot)
+-- 	TriggerEvent("newspaper:readNewspaper")
+-- end)
 
 Item('tonic_horse_stimulant', function(data, slot)
 	local playerPed = PlayerPedId()
@@ -577,10 +586,27 @@ Item('empty_watering_can', function(data, slot)
         end
     end)
 end)
+
+-- Item('bottle_empty', function(data, slot)
+--     exports.ox_inventory:useItem(data, function(data)
+--         if data then
+--             TriggerEvent("river_actions:item", data.name)
+--         end
+--     end)
+-- end)
+
+Item('canteen_full', function(data, slot)
+
+	TriggerEvent("river_actions:item", data.name)
+
+    exports.ox_inventory:useItem(data, function(data)
+		TriggerServerEvent("HUD:Consumable:Item", data.name)
+	end)
+end)
+
 Item('canteen_empty', function(data, slot)
     TriggerEvent("river_actions:item", data.name)
 end)
-
 
 Item('tonic_horse_revive', function(data, slot)
 	ExecuteCommand('reviveitem')
@@ -590,10 +616,193 @@ Item("luckybox", function(data, slot)
 	TriggerServerEvent('inventory:item:OpenLuckyBox')
 end)
 
+Item("initial_weapon_box", function(data, slot)
+	TriggerServerEvent('inventory:item:openWeaponBox', data.name)
+end)
+Item("medium_weapon_box", function(data, slot)
+	TriggerServerEvent('inventory:item:openWeaponBox', data.name)
+end)
+Item("elite_weapon_box", function(data, slot)
+	TriggerServerEvent('inventory:item:openWeaponBox', data.name)
+end)
+
+Item('whistle', function(data, slot)
+    exports.ox_inventory:useItem(data, function(data)
+        if data then
+            TriggerEvent("law:whistle:item")
+        end
+    end)
+end)
+
+Item('scroll_skill', function(data, slot)
+    exports.ox_inventory:useItem(data, function(data)
+		local metadata = slot.metadata
+		TriggerEvent("frp:tryUnlockSkill", metadata.skill, slot.slot)
+    end)
+end)
+
+Item("dry_rack", function(data, slot)
+	TriggerEvent('plantation:client:requestDry')
+end)
 
 
+Item("misc_bench", function(data, slot)
+	local metadata = slot.metadata
+	TriggerEvent('crafting:beforeBenches', metadata.bench, metadata.permission)
+end)
 
 
+Item("blueprint_molotov", function(data, slot)
+	TriggerEvent('crafting:useBlueprint', data.name)
+end)
+
+
+Item("collectable_card", function(data, slot)
+	local metadata = slot.metadata
+	TriggerEvent('FRP:interactWithCard', metadata.model)
+end)
+
+-- Item('money_clip', function(data, slot)
+-- 	TriggerServerEvent('inventory:tryPileMoney')
+-- end)
+
+-- Item('ore_coal_nugget', function(data, slot)
+-- 	TriggerServerEvent('inventory:tryCoalBox')
+-- end)
+
+Item('bag_container', function(data, slot)
+    exports.ox_inventory:useItem(data, function(data)
+		
+	end)
+end)
+
+local blueprints = {
+	"blueprint_ammunition",
+	"blueprint_pistol",
+	"blueprint_revolver",
+	"blueprint_rifle",
+	"blueprint_repeater",
+	"blueprint_shotgun",
+	"blueprint_cruza",
+	"blueprint_saka_cafe",
+	"blueprint_saka_corn",
+	"blueprint_yeast",
+	"blueprint_cow_milk",
+	"blueprint_licor_coffee",
+	"blueprint_corn_oil",
+	"blueprint_cornstarch",
+	"blueprint_wheat_beer",
+	"blueprint_alcohol",
+	"blueprint_craft_alcohol",
+	"blueprint_flour_wheat",
+	"blueprint_refined_sugar",
+	"blueprint_molasses_sugar",
+	"blueprint_sugar",
+	"blueprint_coffee_powder",
+	"blueprint_gunpowder",
+	"blueprint_lockpick_advanced",
+	"blueprint_pistol_m1899",
+	"blueprint_revolver_cattleman",
+	"blueprint_revolver_lemat",
+	"blueprint_repeater_henry",
+	"blueprint_rifle_springfield",
+	"blueprint_shotgun_doublebarrel",
+	"blueprint_pulp_orange",
+	"blueprint_pulp_strawberry",
+	"blueprint_pulp_blackberry",
+	"blueprint_dynamite",
+
+	"blueprint_lockpick",
+	"blueprint_handcuffs",
+	"blueprint_handcuffs_keys",
+	"blueprint_ammerican_cedules",
+	"blueprint_cedules_molds",
+	"blueprint_capitale",
+	"blueprint_herbs_fine_package",
+	"blueprint_oilgun"
+}
+
+for _, blueprint in pairs (blueprints) do 
+	Item(blueprint, function(data, slot)
+		TriggerEvent('crafting:useBlueprint', blueprint)
+	end)
+end
+
+Item("clothing", function(data, slot)
+	local metadata = slot.metadata
+
+	if metadata.outfit_id then
+		TriggerServerEvent('murphy_clothing:UseOutfit',metadata.outfit_id)
+	else
+		TriggerEvent('frp:tailor:applyItemOutfit', metadata.pedModel, metadata.outfitId)
+	end
+end)
+
+local headBands = {
+	'headbands1',
+	'headbands2',
+	'headbands3',
+	'headbands4',
+	'headbands5',
+	'headbands6',
+
+	'native_accessory_1',
+	'native_accessory_2',
+	'native_accessory_3',
+	'native_accessory_4',
+	'native_accessory_5',
+	'native_accessory_6',
+	'native_accessory_7',
+	'native_accessory_8',
+
+	'headband1',
+	'headband2',
+	'headband3',
+	'headband4',
+	'headband5',
+	'headband6',
+}
+for _, headband in pairs (headBands) do 
+	Item(headband, function(data, slot)
+		TriggerEvent('mm_native_headbands:AttachHeadbandTypeOnPlayerPed', headband)
+	end)
+end
+
+local facepaints = {
+	'native_paint_1',
+	'native_paint_2',
+	'native_paint_3',
+	'native_paint_4',
+	'native_paint_5',
+}
+
+for _, facepaint in pairs (facepaints) do 
+	Item(facepaint, function(data, slot)
+		TriggerEvent('native_paint:apply', facepaint)
+	end)
+end
+
+Item('phonograph', function(data, slot)
+    exports.ox_inventory:useItem(data, function(data)
+		TriggerEvent("boss_phonograph:client:placePropPhonograph")
+	end)
+end)
+
+Item('reviver', function(data, slot)
+    exports.ox_inventory:useItem(data, function(data)
+		TriggerEvent("frp:reviverItem", data, slot)
+	end)
+end)
+
+-- Item('tonic_horse_reviver', function(data, slot)
+--     exports.ox_inventory:useItem(data, function(data)
+-- 		TriggerEvent("frp:reviverItem", data, slot)
+-- 	end)
+-- end)
+
+Item('honeycombs', function(data, slot)
+	TriggerServerEvent('inventory:tryHoneycombs')
+end)
 
 exports('Items', function(item) return getItem(nil, item) end)
 exports('ItemList', function(item) return getItem(nil, item) end)

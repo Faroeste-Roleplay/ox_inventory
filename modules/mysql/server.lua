@@ -14,7 +14,7 @@ local Query = {
     UPDATE_GLOVEBOX = 'UPDATE `{vehicle_table}` SET glovebox = ? WHERE `{vehicle_column}` = ?',
 
     UPDATE_PLAYER = 'UPDATE `{user_table}` SET items = ? WHERE `{user_column}` = ?',
-    SELECT_PLAYER = 'SELECT items FROM `{user_table}` WHERE `{user_column}` = ?',
+    SELECT_PLAYER = 'SELECT items, weight, slots FROM `{user_table}` WHERE `{user_column}` = ? LIMIT 1',
 }
 
 Citizen.CreateThreadNow(function()
@@ -129,8 +129,10 @@ end)
 db = {}
 
 function db.loadPlayer(identifier)
-    local inventory = MySQL.prepare.await(Query.SELECT_PLAYER, { identifier }) --[[@as string?]]
-    return inventory and json.decode(inventory)
+    local res = MySQL.single.await(Query.SELECT_PLAYER, { identifier }) --[[@as string?]]
+    local inventory = res?.items
+
+    return { items = inventory and json.decode(inventory), slots = res?.slots, weight = res?.weight}
 end
 
 function db.savePlayer(owner, inventory)

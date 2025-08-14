@@ -28,8 +28,8 @@ $borderRadius: 0.25vh;
 
 $gridCols: 5;
 $gridRows: 5;
-$gridSize: 7.3vh;
-$gridGap: 3.7px;
+$gridSize: 8.8vh;
+$gridGap: 5px;
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
 $containerSizeMinimal: calc(#{2} * #{$gridSize + 0.22vh} + #{2} * #{$gridGap});
 
@@ -188,7 +188,7 @@ button:active {
 
     padding: 0.5vh 2vh;
 
-    background: url(./background_new_inventario.png);
+    background: url(./background_actions.png);
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;    
@@ -391,7 +391,7 @@ button:active {
   font-family: $secondFont;
   text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
   color: white;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 
@@ -413,22 +413,22 @@ button:active {
   align-items: center;
   z-index: 1;
 
-  opacity: 0.1;
+  opacity: 0.2;
   user-select: none;
   pointer-events: none;
 }
 
-.hotbar-slot-header-wrapper > .inventory-slot-number {
+// .hotbar-slot-header-wrapper > .inventory-slot-number {
   
-  font-size: 1.5vh;
-  opacity: 0.6;
+//   font-size: 1.9vh;
+//   opacity: 0.6;
 
-  justify-content: left;
-  align-items: start;
+//   justify-content: left;
+//   align-items: start;
 
-  padding-left: .4em;
-  padding-top: .4em;
-}
+//   padding-left: .4em;
+//   padding-top: .4em;
+// }
 
 .item-slot-image {
   @extend .inventory-slot;
@@ -454,6 +454,13 @@ button:active {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  // background: url(./background_notifications.png);
+  // background-size: 100%;
+  // background-position: center;
+  // background-repeat: no-repeat;
+  
+  // padding: 20px 10px;
 
   gap: 2vh;
 }
@@ -730,5 +737,22 @@ button:active {
 }
 
 .ui_removed {
-  color: rgb(199, 5, 4) !important;
+  color: #f22a19 !important;
+}
+
+.ammoTypeContainer {
+  position:absolute;
+
+  text-align: right;
+  font-weight: bold;
+
+  top: 10em;
+  right: 3em;
+
+  img {
+    opacity: 0.5;
+  }
+  .currentAmmo {
+    opacity: 1.0;
+  }
 }

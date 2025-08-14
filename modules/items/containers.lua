@@ -51,16 +51,33 @@ local function setContainerProperties(itemName, properties)
 	}
 end
 
-setContainerProperties('ammo_case', {
+setContainerProperties('box_ammunition', {
+	slots = 10,
+	maxWeight = 1000,
+	whitelist = { 
+		['AMMO_REVOLVER'] = true,
+		['AMMO_REVOLVER_EXPRESS_EXPLOSIVE'] = true,
+		['AMMO_PISTOL'] = true,
+		['AMMO_SHOTGUN'] = true,
+		['AMMO_REPEATER'] = true,
+		['AMMO_RIFLE'] = true
+	}
+})
+
+setContainerProperties('box_varmint', {
 	slots = 5,
 	maxWeight = 3000,
 	whitelist = { 
-		['ammo_revolver'] = true,
-		['ammo_revolver_express_explosive'] = true,
-		['ammo_pistol'] = true,
-		['ammo_shotgun'] = true,
-		['ammo_repeater'] = true,
-		['ammo_rifle'] = true
+		['AMMO_22'] = true,
+	}
+})
+
+setContainerProperties('box_revolver', {
+	slots = 5,
+	maxWeight = 3000,
+	whitelist = { 
+		['AMMO_REVOLVER'] = true,
+		['AMMO_REVOLVER_EXPRESS_EXPLOSIVE'] = true
 	}
 })
 

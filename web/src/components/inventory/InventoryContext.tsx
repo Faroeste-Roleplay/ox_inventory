@@ -104,7 +104,7 @@ const InventoryContext: React.FC = () => {
             label={Locale.ui_copy}
           />
         )}
-        {item && item.metadata?.components && item.metadata?.components.length > 0 && (
+        {/* {item && item.metadata?.components && item.metadata?.components.length > 0 && (
           <Menu label={Locale.ui_removeattachments}>
             {item &&
               item.metadata?.components.map((component: string, index: number) => (
@@ -115,7 +115,7 @@ const InventoryContext: React.FC = () => {
                 />
               ))}
           </Menu>
-        )}
+        )} */}
         {((item && item.name && Items[item.name]?.buttons?.length) || 0) > 0 && (
           <>
             {item &&

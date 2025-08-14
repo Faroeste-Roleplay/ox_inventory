@@ -69,6 +69,7 @@ local function newItem(data)
         end
 	end
 
+
     ::continue::
 	ItemList[data.name] = data
 end
@@ -97,12 +98,12 @@ for type, data in pairs(lib.load(string.format('data.weapons_%s', IS_GTAV and "G
 								TriggerEvent('ox_inventory:weaponInspectUsed', PlayerData.inventory[slot])
 							end
 						},
-						{
-							label = locale('unload_ammo'),
-							action = function(slot)
-								TriggerEvent('ox_inventory:weaponUnloadAmmo', PlayerData.inventory[slot])
-							end
-						},
+						-- {
+						-- 	label = locale('unload_ammo'),
+						-- 	action = function(slot)
+						-- 		TriggerEvent('ox_inventory:weaponUnloadAmmo', PlayerData.inventory[slot])
+						-- 	end
+						-- },
 					}
 
 					if string.find(string.lower(v.name), "revolver") or string.find(string.lower(v.name), "pistol") then
@@ -148,6 +149,8 @@ end
 
 local itemsListByType =
 {
+	'collectable',
+	'blueprints',
 	'container',
 	'drugs',
 	'fishing',
@@ -177,8 +180,9 @@ if IS_RDR3 then
 	for _, type in pairs(itemsListByType) do
 		for k, v  in pairs( lib.load( ("data.items.%s"):format(type)) ) do
 			v.name = k
+
 			local success, response = pcall(newItem, v)
-		
+			
 			if not success then
 				warn(('An error occurred while creating item "%s" callback!\n^1SCRIPT ERROR: %s^0'):format(k, response))
 			end

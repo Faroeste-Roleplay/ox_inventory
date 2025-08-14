@@ -2,6 +2,7 @@ local Tunnel = module("frp_lib", "lib/Tunnel")
 local Proxy = module("frp_lib", "lib/Proxy")
 
 API = Proxy.getInterface("API")
+cAPI = Tunnel.getInterface("API")
 
 local Inventory = require 'modules.inventory.server'
 local Items = require 'modules.items.server'
@@ -11,14 +12,16 @@ Proxy.addInterface("inventory", Inventory)
 
 Business = Proxy.getInterface("business")
 
-AddEventHandler('FRP:ReleaseCharacter', function(playerId)
-	server.playerDropped(playerId)
+AddEventHandler('FRP:onCharacterLogout', function(User)
+	server.playerDropped( User:GetSource() )
 end)
 
-AddEventHandler('FRP:UserDropped', server.playerDropped)
+-- AddEventHandler('FRP:UserDropped', server.playerDropped)
 
 local function setupPlayer(User, charId)
 	local Player = User:GetCharacter()
+
+	if not Player then return end
 
 	local PlayerData = {}
 	PlayerData.source = Player.source

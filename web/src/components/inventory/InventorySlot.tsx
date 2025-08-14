@@ -111,7 +111,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     dispatch(closeTooltip());
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef && timerRef.current) clearTimeout(timerRef.current as any);
     if (event.ctrlKey && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting') {
       onDrop({ item: item, inventory: inventoryType });
     } else if (event.altKey && isSlotWithItem(item) && inventoryType === 'player') {
@@ -123,7 +123,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
 
   const hasWeaponInName = item?.name?.toLocaleLowerCase().search("weapon")
   const isWeapon = hasWeaponInName != -1 && hasWeaponInName != undefined;
-
 
   useEffect(() => {
     const placeHolderUrl = `${item?.name ? imagepath : ''}/_placeholder.png`
@@ -161,6 +160,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       }}
     >
 
+      {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
       {isSlotWithItem(item) && (
         <div
           className="item-slot-wrapper"
@@ -172,7 +172,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           onMouseLeave={() => {
             dispatch(closeTooltip());
             if (timerRef.current) {
-              clearTimeout(timerRef.current);
+              clearTimeout(timerRef.current as any);
               timerRef.current = null;
             }
           }}
@@ -182,7 +182,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
               inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'
             }
           >
-            {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
             <div className="item-slot-info-wrapper">
               <p>
                 {item.weight > 0
@@ -197,7 +196,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
               </p>
 
               { isWeapon && inventoryType !== 'shop'               
-                ? <span> {item.metadata?.ammo}/{item.metadata?.ammoMaxClip ?? item.metadata?.ammo}</span>
+                ? item.name.toLocaleLowerCase().search("thrown") != -1 ? <span> {item.count}</span> : <span> {item.metadata?.ammo}/{item.metadata?.ammoMaxClip ?? item.metadata?.ammo}</span>
                 : <span>{item.count > 1 ? item.name == "money" ? `${(item.count / 100).toFixed(2)}` : item.count.toLocaleString('en-us') : ''}</span>
               }
             </div>

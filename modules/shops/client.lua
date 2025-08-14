@@ -134,7 +134,7 @@ end
 local function createShopPrompt(point)
 	if point.prompt then
 		prompt__Open = PromptBuilder:new()
-			:setControl(`INPUT_ENTER`)
+			:setControl(`INPUT_QUICK_USE_ITEM`)
 			:setText(('Abrir %s'):format(point.label))
 			:setMode('Hold', 500)
 			:setPoint(vector3(point.coords.x, point.coords.y, point.coords.z))
