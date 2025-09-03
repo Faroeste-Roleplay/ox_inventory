@@ -508,7 +508,7 @@ end
 -- end, true)
 
 
-local discordWebHook = "https://discord.com/api/webhooks/1358809588819955924/SNYdN-j5184d_qJp2siObtuCvQJs5czaeh1dVGo9zqznEjNItlUQeST_LHwjw3TOBvYP"
+local discordWebHook = "DISCORD_WEBHOOK_TO_LOG"
 
 function logs(playerId, message)
 	local playerDiscord = GetPlayerIdentifierByType( playerId, "discord") 
